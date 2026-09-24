@@ -3282,6 +3282,14 @@ and never merge owned-media metrics with public-conversation metrics.</div></div
   document.addEventListener("keydown",e=>{
     if(e.key==="Escape" && appSidebar?.classList.contains("mobile-open")){
       setMobileNavOpen(false);
+      return;
+    }
+    if(e.key==="Tab" && appSidebar?.classList.contains("mobile-open") && mobileNavQuery.matches){
+      const focusable=[...appSidebar.querySelectorAll('button:not([disabled]),select:not([disabled]),input:not([disabled]),a[href],[tabindex]:not([tabindex="-1"])')].filter(el=>el.offsetParent!==null);
+      if(!focusable.length)return;
+      const first=focusable[0],last=focusable[focusable.length-1];
+      if(e.shiftKey && document.activeElement===first){e.preventDefault();last.focus()}
+      else if(!e.shiftKey && document.activeElement===last){e.preventDefault();first.focus()}
     }
   });
 
@@ -3299,13 +3307,17 @@ and never merge owned-media metrics with public-conversation metrics.</div></div
   }
 
   syncMobileNavA11y();
+  syncVisibleRoute?.();
 
 
   let routeSyncSuppressed=false;
 
   function syncVisibleRoute(){
+    const path=window.location.pathname+window.location.search;
     const el=document.getElementById("currentRoutePath");
-    if(el)el.textContent=window.location.pathname+window.location.search;
+    const mobileEl=document.getElementById("mobileRoutePath");
+    if(el)el.textContent=path;
+    if(mobileEl)mobileEl.textContent=path;
   }
 
   function writeAppRoute(path,title){
@@ -3325,6 +3337,28 @@ and never merge owned-media metrics with public-conversation metrics.</div></div
       showSystemToast("Copy unavailable",window.location.pathname+window.location.search);
     }
   });
+
+  document.getElementById("mobileCopyRoute")?.addEventListener("click",async()=>{
+    const url=window.location.href;
+    try{
+      await navigator.clipboard.writeText(url);
+      showSystemToast("Link copied",window.location.pathname+window.location.search);
+    }catch{
+      showSystemToast("Copy unavailable",window.location.pathname+window.location.search);
+    }
+  });
+
+  function syncMobileContext(){
+    const desktopTitle=document.getElementById("contextTitle")?.textContent||"The Pull";
+    const desktopMeta=document.getElementById("contextMeta")?.textContent||"";
+    const mobileTitle=document.getElementById("mobileContextTitle");
+    const mobileMeta=document.getElementById("mobileContextMeta");
+    if(mobileTitle)mobileTitle.textContent=desktopTitle;
+    if(mobileMeta)mobileMeta.textContent=desktopMeta;
+    const role=document.getElementById("roleSelect")?.value;
+    const mobileRole=document.getElementById("mobileRoleSelect");
+    if(mobileRole && role)mobileRole.value=role;
+  }
 
   function routeForAdminScreen(name){
     const map={
@@ -3399,6 +3433,7 @@ and never merge owned-media metrics with public-conversation metrics.</div></div
     }else{
       title.textContent="BRUT × FAUX";meta.textContent="Opportunity 03";if(workspaceLabel)workspaceLabel.innerHTML="<strong>Studio workspace</strong><span>BRUT × FAUX</span>";updateAdminStage(name);
     }
+    syncMobileContext();
     writeAppRoute(routeForAdminScreen(name),titleForAdminScreen(name));
     window.scrollTo({top:0,behavior:"smooth"});
   }
@@ -4307,11 +4342,14 @@ and never merge owned-media metrics with public-conversation metrics.</div></div
     document.getElementById("contextTitle").textContent = "BRUT × FAUX";
     document.getElementById("contextMeta").textContent = cfg.brand + " portal";
     document.getElementById("sidebarFooter").innerHTML = cfg.brand + " brand portal.<br/>Partner Studio handles execution; shared and private information remain separated.";
+    syncMobileContext();
     resetApprovalCount();
   }
 
   function setRole(role){
     currentRole = role;
+    const desktopRole=document.getElementById("roleSelect");if(desktopRole&&desktopRole.value!==role)desktopRole.value=role;
+    const mobileRole=document.getElementById("mobileRoleSelect");if(mobileRole&&mobileRole.value!==role)mobileRole.value=role;
     renderProfileForRole(role);
     const admin = role === "admin";
     document.getElementById("adminSidebarContent").classList.toggle("hidden", !admin);
@@ -4351,7 +4389,8 @@ and never merge owned-media metrics with public-conversation metrics.</div></div
     const copy=document.getElementById("approvalSummaryCopy"); if(copy) copy.textContent = count===0 ? "Partner Studio can keep moving." : (count===1 ? "One more decision and Partner Studio can move the collaboration forward." : "Complete these and Partner Studio can move the collaboration into production planning.");
   }
 
-  document.getElementById("roleSelect").addEventListener("change", e => setRole(e.target.value));  document.querySelectorAll("[data-client-screen]").forEach(btn => btn.addEventListener("click", () => showClient(btn.dataset.clientScreen)));
+  document.getElementById("roleSelect").addEventListener("change", e => {const mobile=document.getElementById("mobileRoleSelect");if(mobile)mobile.value=e.target.value;setRole(e.target.value)});
+  document.getElementById("mobileRoleSelect")?.addEventListener("change", e => {const desktop=document.getElementById("roleSelect");if(desktop)desktop.value=e.target.value;setRole(e.target.value);setMobileNavOpen(false,{restoreFocus:false})});  document.querySelectorAll("[data-client-screen]").forEach(btn => btn.addEventListener("click", () => showClient(btn.dataset.clientScreen)));
   document.querySelectorAll(".client-approval-action").forEach(btn => btn.addEventListener("click", () => {
     const card = btn.closest("[data-approval]");
     if(!card || card.classList.contains("approved")) return;
