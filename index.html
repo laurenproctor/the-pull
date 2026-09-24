@@ -1338,6 +1338,68 @@
     .profile-save-state.error .profile-save-dot{background:#a52a22}
     @keyframes savePulse{from{opacity:.45}to{opacity:1}}
   
+  
+    /* Observatory study editorial refinement */
+    .study-title-card.visual-study{padding:0;border-radius:28px;overflow:hidden;background:#fff}
+    .study-title-layout{grid-template-columns:minmax(0,1.05fr) minmax(430px,.95fr);gap:0;min-height:690px;align-items:stretch}
+    .study-title-copy{padding:42px 44px 46px;display:flex;flex-direction:column;justify-content:center}
+    .study-title-copy .row.start{display:flex;flex-direction:column-reverse;align-items:flex-start;gap:18px}
+    .study-title-copy .row.start>div{width:100%}
+    .study-title-copy h2{font-size:clamp(48px,4.6vw,70px);line-height:.98;letter-spacing:-.055em;max-width:720px;margin:12px 0 18px}
+    .study-title-copy #studySubtitle{max-width:650px;font-size:16px;line-height:1.72}
+    #studyStatus{margin:0;padding:8px 13px}
+    .study-scope{margin-top:26px}
+    .window-tabs{margin-top:12px}
+    .study-kpi-ribbon{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:30px}
+    .study-kpi{min-height:148px;padding:20px 22px 22px;display:flex;flex-direction:column;justify-content:flex-start}
+    .study-kpi span{margin-bottom:10px}
+    .study-kpi strong{font-size:clamp(31px,3vw,43px);line-height:.98;max-width:100%}
+    .study-kpi small{margin-top:auto;padding-top:13px}
+    .study-hero-art.real{min-height:100%;height:100%;border-radius:0;background-color:#f4f4f2;background-position:center center}
+    .study-hero-art.real .study-art-note{top:24px;left:24px;max-width:calc(100% - 48px);padding:8px 12px;font-size:10px;letter-spacing:.07em}
+    .study-summary{margin-top:28px;padding:30px 32px}
+    .study-section-head{margin:48px 0 18px}
+
+    .press-preview-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}
+    .press-preview-card,.press-preview-card:visited{display:flex;flex-direction:column;overflow:hidden;border-radius:24px;background:#fff;border:1px solid rgba(16,24,40,.08);box-shadow:0 12px 34px rgba(15,23,42,.055);text-decoration:none;color:var(--ink);transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+    .press-preview-card:hover{transform:translateY(-3px);box-shadow:0 18px 44px rgba(15,23,42,.09);border-color:#d4dad6}
+    .press-preview-image{height:170px;background-size:cover;background-position:center;background-color:#f4f5f4}
+    .press-preview-body{padding:24px 24px 22px;display:flex;flex-direction:column;flex:1}
+    .press-brand-row{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:22px}
+    .press-logo-wrap{height:44px;min-width:72px;max-width:180px;display:flex;align-items:center;justify-content:flex-start}
+    .press-logo-wrap img{display:block;max-width:100%;max-height:42px;width:auto;height:auto;object-fit:contain}
+    .press-logo-fallback{font-size:12px;text-transform:uppercase;letter-spacing:.08em;font-weight:800;color:#5c6670}
+    .press-preview-card h4{margin:0 0 13px;font-size:20px;line-height:1.28;letter-spacing:-.025em;color:#15191d;text-decoration:none}
+    .press-preview-card p{font-size:14px;line-height:1.62;color:var(--muted);text-decoration:none}
+    .press-read-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:auto;padding-top:22px;font-size:11px;font-weight:750;color:#294b3f}
+    .press-read-row span:last-child{font-size:16px;font-weight:500}
+    .press-pub{display:none}
+
+    @media(max-width:1180px){
+      .study-title-layout{grid-template-columns:minmax(0,1fr) minmax(360px,.82fr);min-height:640px}
+      .study-title-copy{padding:36px 34px 40px}
+      .study-title-copy h2{font-size:clamp(44px,5vw,60px)}
+    }
+    @media(max-width:900px){
+      .study-title-layout{display:flex;flex-direction:column}
+      .study-hero-art.real{order:-1;min-height:480px;height:auto;border-radius:0}
+      .study-title-copy{padding:32px 30px 38px}
+      .press-preview-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    }
+    @media(max-width:680px){
+      .study-title-card.visual-study{border-radius:20px}
+      .study-hero-art.real{min-height:340px}
+      .study-title-copy{padding:28px 22px 30px}
+      .study-title-copy h2{font-size:42px}
+      .study-kpi-ribbon{grid-template-columns:1fr}
+      .study-kpi{min-height:0}
+      .press-preview-grid{grid-template-columns:1fr;gap:16px}
+      .press-preview-image{height:155px}
+      .press-preview-body{padding:21px}
+      .press-logo-wrap{height:38px;max-width:150px}
+      .press-logo-wrap img{max-height:36px}
+    }
+  
   </style>
 </head>
 <body>
@@ -2628,9 +2690,9 @@ and never merge owned-media metrics with public-conversation metrics.</div></div
         {title:"Outcome limits",note:"Keep missing outcomes explicit.",lines:[{name:"Owned social engagement",value:"Not captured",meta:"No reliable post snapshot in source pack"},{name:"Sell-through",value:"Unknown",meta:"No first-party commerce data"},{name:"Incremental brand/sales lift",value:"Unknown",meta:"No causal study"}]}
       ],
       press:[
-        {pub:"Modern Notoriety",date:"Sep 16",title:"Dickies Celebrates 150 Years of Budweiser With New Workwear Collection",summary:"Detailed the 52-piece first drop, hero products, price range and social-contest mechanic.",link:"https://modernnotoriety.com/dickies-budweiser-release-date/"},
-        {pub:"Brand Innovators",date:"Sep 17",title:"Budweiser, Dickies celebrate their shared values",summary:"Framed the partnership around American heritage, hard work, shared communities and the 100-jacket nomination contest.",link:"https://brand-innovators.com/budweiser-dickies-celebrate-their-shared-values/"},
-        {pub:"License Global",date:"Sep 16",title:"Dickies, Budweiser Launch Anniversary Collection",summary:"Trade coverage confirmed the limited jacket, retail collection, 100 winners and the required contest hashtags.",link:"https://www.licenseglobal.com/food-beverages/dickies-x-budweiser-launch-limited-edition-jacket-contest-and-apparel-collection"}
+        {pub:"Modern Notoriety",logo:"https://www.modernnotoriety.com/wp-content/uploads/2025/07/Y2K-MN-LOGO-1-scaled.png",date:"Sep 16",title:"Dickies Celebrates 150 Years of Budweiser With New Workwear Collection",summary:"Detailed the 52-piece first drop, hero products, price range and social-contest mechanic.",link:"https://modernnotoriety.com/dickies-budweiser-release-date/"},
+        {pub:"Brand Innovators",logo:"https://d3q27bh1u24u2o.cloudfront.net/news/2025-04/Brand-Innovators.ncWR1c75.png",date:"Sep 17",title:"Budweiser, Dickies celebrate their shared values",summary:"Framed the partnership around American heritage, hard work, shared communities and the 100-jacket nomination contest.",link:"https://brand-innovators.com/budweiser-dickies-celebrate-their-shared-values/"},
+        {pub:"License Global",logo:"https://eu-images.contentstack.com/v3/assets/blt8770191dea35bccc/bltf8c58d8bcc0217d5/64d384a8644d72dd5bee2915/licensegloballogo.png?auto=webp&disable=upscale&quality=80&width=1280",date:"Sep 16",title:"Dickies, Budweiser Launch Anniversary Collection",summary:"Trade coverage confirmed the limited jacket, retail collection, 100 winners and the required contest hashtags.",link:"https://www.licenseglobal.com/food-beverages/dickies-x-budweiser-launch-limited-edition-jacket-contest-and-apparel-collection"}
       ],
       facts:[["Verified","2026-09-23"],["Primary public angle","Hard work + American heritage"],["Official commerce source","Dickies.com"],["Commercial outcomes","Not publicly verified"]],
       sources:[
@@ -2784,7 +2846,7 @@ and never merge owned-media metrics with public-conversation metrics.</div></div
     const gallery=document.getElementById('studyGallery');if(gallery)gallery.innerHTML=(s.gallery&&s.gallery.length)?s.gallery.map(g=>`<div class="study-image-card"><img src="${s.fallbackImage}" data-source-url="${g.img}" alt="${g.title}" loading="lazy"><div class="body"><span class="source-pill">Prototype photo · source linked</span><strong style="display:block;margin-top:8px">${g.title}</strong><p class="muted small" style="margin-top:8px">${g.copy}</p></div></div>`).join(''):`<div class="study-empty" style="grid-column:1/-1">No verified visual asset attached.</div>`;
     const social=document.getElementById('studySocial');if(social)social.innerHTML=(s.social&&s.social.length)?s.social.map(p=>`<div class="social-preview-card"><div class="social-preview-head"><div class="social-handle"><div class="social-badge">${p.badge}</div><div><strong>${p.handle}</strong><div class="muted small">${p.title}</div></div></div><span class="pill">Owned/context</span></div><div class="social-preview-thumb"><img src="${s.fallbackImage}" data-source-url="${p.img}" alt="${p.title}" loading="lazy"></div><div class="social-preview-body"><span class="source-pill">Prototype photo · source linked</span><p class="muted small" style="margin-top:8px">${p.copy}</p><div class="engagement-row">${(p.engagement||[]).map(e=>`<span class="engagement-pill">${e}</span>`).join('')}</div></div></div>`).join(''):`<div class="study-empty" style="grid-column:1/-1">No verified owned-media source attached.</div>`;
     const fam=document.getElementById('publicMetricFamilies');if(fam)fam.innerHTML=(s.metricFamilies||[]).map(f=>`<div class="metric-family"><h3>${f.title}</h3><div class="family-note">${f.note}</div>${(f.lines||[]).map(l=>`<div class="obs-metric-line"><span class="name">${l.name}</span><span class="value">${l.value}</span><span class="meta">${l.meta}</span></div>`).join('')}</div>`).join('');
-    const press=document.getElementById('studyPress');if(press)press.innerHTML=(s.press&&s.press.length)?s.press.map((p,i)=>`<a class="press-preview-card" href="${p.link}" target="_blank" rel="noopener noreferrer"><div class="press-preview-image" style="background-image:url('${p.img || ((s.gallery&&s.gallery.length)?s.gallery[i%s.gallery.length].img:s.heroImage)}')"></div><div class="press-preview-body"><div class="press-top"><span class="press-pub">${p.pub}</span><span class="pill">${p.date}</span></div><h4>${p.title}</h4><p>${p.summary}</p></div></a>`).join(''):`<div class="study-empty" style="grid-column:1/-1">No validated press cards attached.</div>`;
+    const press=document.getElementById('studyPress');if(press)press.innerHTML=(s.press&&s.press.length)?s.press.map((p,i)=>`<a class="press-preview-card" href="${p.link}" target="_blank" rel="noopener noreferrer"><div class="press-preview-image" style="background-image:url('${p.img || ((s.gallery&&s.gallery.length)?s.gallery[i%s.gallery.length].img:s.heroImage)}')"></div><div class="press-preview-body"><div class="press-brand-row"><div class="press-logo-wrap">${p.logo?`<img src="${p.logo}" alt="${p.pub} logo" loading="lazy">`:`<span class="press-logo-fallback">${p.pub}</span>`}</div><span class="pill">${p.date}</span></div><h4>${p.title}</h4><p>${p.summary}</p><div class="press-read-row"><span>Read coverage</span><span>↗</span></div></div></a>`).join(''):`<div class="study-empty" style="grid-column:1/-1">No validated press cards attached.</div>`;
     const facts=document.getElementById('studyFacts');if(facts)facts.innerHTML=(s.facts||[]).map(([a,b])=>`<div class="baseline-item"><span>${a}</span><span class="state">${b}</span></div>`).join('');
     const sources=document.getElementById('studySources');if(sources)sources.innerHTML=(s.sources||[]).map(src=>`<a class="source-link" href="${src.url}" target="_blank" rel="noopener noreferrer"><strong>${src.title}</strong><small>${src.sub}</small><div class="source-meta"><span class="source-tag ${String(src.tier).toLowerCase()}">Tier ${src.tier}</span><span class="source-tag">${src.usedFor}</span><span class="source-tag">captured ${src.captured}</span></div></a>`).join('');
     document.querySelectorAll('.study-card').forEach(card=>card.classList.toggle('selected',card.dataset.studyId===id));
