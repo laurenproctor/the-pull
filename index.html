@@ -2917,7 +2917,7 @@ and never merge owned-media metrics with public-conversation metrics.</div></div
 </div>
 
 <script>
-  const screens = ["brief","discover","assessment","compare","opportunity","tracker","observatory","reports"];
+  const screens = ["brief","discover","assessment","compare","opportunity","tracker","observatory","analytics","legal","creative","campaign"];
   let routeSyncSuppressed=false;
 
   function syncVisibleRoute(){
@@ -2952,13 +2952,16 @@ and never merge owned-media metrics with public-conversation metrics.</div></div
       opportunity:"/app/opportunities/brut-faux/opportunity-brief",
       tracker:"/app/opportunities/brut-faux/pursuit",
       observatory:"/observatory",
-      reports:"/reports"
+      analytics:"/analytics",
+      legal:"/legal",
+      creative:"/creative",
+      campaign:"/campaign"
     };
     return map[name]||"/app/discover";
   }
 
   function titleForAdminScreen(name){
-    const map={brief:"Collaboration Brief",discover:"Discover",assessment:"Assessment",compare:"Compare",opportunity:"Opportunity Brief",tracker:"Pursuit",observatory:"Observatory",reports:"Reports"};
+    const map={brief:"Collaboration Brief",discover:"Discover",assessment:"Assessment",compare:"Compare",opportunity:"Opportunity Brief",tracker:"Pursuit",observatory:"Observatory",analytics:"Analytics & Reporting",legal:"Legal & Contracts",creative:"Creative",campaign:"Campaign Planning"};
     return map[name]||"The Pull";
   }
 
@@ -2984,8 +2987,8 @@ and never merge owned-media metrics with public-conversation metrics.</div></div
     screens.forEach(s => document.getElementById("screen-"+s).classList.toggle("hidden", s !== name));
     document.querySelectorAll("[data-screen]").forEach(btn => btn.classList.toggle("active", btn.dataset.screen === name));
     const isObservatory = name === "observatory";
-    const isReports = name === "reports";
-    const isOpportunityFlow = !isObservatory && !isReports;
+    const isTopLevel = ["observatory","analytics","legal","creative","campaign"].includes(name);
+    const isOpportunityFlow = !isTopLevel;
     document.getElementById("opportunityBar").classList.toggle("hidden", !isOpportunityFlow);
     document.getElementById("screenTabs").classList.toggle("hidden", !isOpportunityFlow);
     const mode = isObservatory ? "observatory" : (name === "discover" ? "market" : "project");
@@ -2994,13 +2997,25 @@ and never merge owned-media metrics with public-conversation metrics.</div></div
     if(name === "discover") primary = "discover";
     else if(name === "tracker") primary = "projects";
     else if(name === "observatory") primary = "intelligence";
-    else if(name === "reports" || name === "opportunity") primary = "reports";
+    else if(name === "analytics") primary = "analytics";
+    else if(name === "legal") primary = "legal";
+    else if(name === "creative") primary = "creative";
+    else if(name === "campaign") primary = "campaign";
     document.querySelectorAll("[data-primary]").forEach(btn => btn.classList.toggle("active", btn.dataset.primary === primary));
     const title = document.getElementById("contextTitle"), meta = document.getElementById("contextMeta");
     const workspaceLabel=document.getElementById("workspaceLabel");
-    if(isObservatory){title.textContent="Collaboration Observatory"; meta.textContent="Market intelligence"; if(workspaceLabel) workspaceLabel.innerHTML="<strong>Observatory</strong><span>Market intelligence</span>";}
-    else if(isReports){title.textContent="Reports"; meta.textContent="Briefs · outcomes · editorial"; if(workspaceLabel) workspaceLabel.innerHTML="<strong>Reports</strong><span>Reusable outputs</span>";}
-    else {title.textContent="BRUT × FAUX"; meta.textContent="Opportunity 03"; if(workspaceLabel) workspaceLabel.innerHTML="<strong>Studio workspace</strong><span>BRUT × FAUX</span>"; updateAdminStage(name);}
+    const topMeta={
+      observatory:["Collaboration Observatory","Market intelligence","Observatory","Market intelligence"],
+      analytics:["Analytics & reporting","Measurement + reporting","Analytics","BRUT × FAUX"],
+      legal:["Legal & contracts","Rights + agreements","Legal","BRUT × FAUX"],
+      creative:["Creative","Assets + approvals","Creative","BRUT × FAUX"],
+      campaign:["Campaign planning","Channels + orchestration","Campaign","BRUT × FAUX"]
+    };
+    if(isTopLevel){
+      const m=topMeta[name];title.textContent=m[0];meta.textContent=m[1];if(workspaceLabel)workspaceLabel.innerHTML="<strong>"+m[2]+"</strong><span>"+m[3]+"</span>";
+    }else{
+      title.textContent="BRUT × FAUX";meta.textContent="Opportunity 03";if(workspaceLabel)workspaceLabel.innerHTML="<strong>Studio workspace</strong><span>BRUT × FAUX</span>";updateAdminStage(name);
+    }
     writeAppRoute(routeForAdminScreen(name),titleForAdminScreen(name));
     window.scrollTo({top:0,behavior:"smooth"});
   }
@@ -3017,7 +3032,10 @@ and never merge owned-media metrics with public-conversation metrics.</div></div
     else if(key === "shortlist") go("compare");
     else if(key === "projects") go("tracker");
     else if(key === "intelligence") go("observatory");
-    else if(key === "reports") go("reports");
+    else if(key === "analytics") go("analytics");
+    else if(key === "legal") go("legal");
+    else if(key === "creative") go("creative");
+    else if(key === "campaign") go("campaign");
   }));
 
   function setObservatoryView(view){
@@ -3950,9 +3968,17 @@ and never merge owned-media metrics with public-conversation metrics.</div></div
         }else if(path==="/observatory"){
           setRole("admin");
           openObservatory("library");
-        }else if(path==="/reports"){
+        }else if(path==="/analytics" || path==="/analytics/channels" || path==="/analytics/data-quality" || path==="/analytics/reports" || path==="/reports"){
           setRole("admin");
-          go("reports");
+          go("analytics");
+          const view=path==="/analytics/channels"?"channels":path==="/analytics/data-quality"?"quality":(path==="/analytics/reports"||path==="/reports")?"reports":"overview";
+          setAnalyticsView(view,false);
+        }else if(path==="/legal"){
+          setRole("admin");go("legal");
+        }else if(path==="/creative"){
+          setRole("admin");go("creative");
+        }else if(path==="/campaign"){
+          setRole("admin");go("campaign");
         }else{
           const opportunity=path.match(/^\/app\/opportunities\/brut-faux\/(brief|assessment|compare|opportunity-brief|pursuit)$/);
           setRole("admin");
@@ -3970,7 +3996,7 @@ and never merge owned-media metrics with public-conversation metrics.</div></div
     const canonical=path==="/"?"/app/discover":path;
     if(path==="/") history.replaceState({path:canonical},"",canonical);
     hydrateDiscoveryFiltersFromUrl();
-    document.title=(canonical==="/profile"?"Profile":canonical.startsWith("/observatory/studies/")?(observatoryStudies[currentStudyId]?.title||"Study"):canonical==="/observatory"?"Observatory":canonical==="/reports"?"Reports":"The Pull")+" · The Pull";
+    document.title=(canonical==="/profile"?"Profile":canonical.startsWith("/observatory/studies/")?(observatoryStudies[currentStudyId]?.title||"Study"):canonical.startsWith("/observatory")?"Observatory":canonical.startsWith("/analytics")||canonical==="/reports"?"Analytics & Reporting":canonical==="/legal"?"Legal & Contracts":canonical==="/creative"?"Creative":canonical==="/campaign"?"Campaign Planning":"The Pull")+" · The Pull";
     syncVisibleRoute();
   }
 
