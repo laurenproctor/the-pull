@@ -3323,13 +3323,24 @@ and never merge owned-media metrics with public-conversation metrics.</div></div
   document.querySelectorAll(".action-state").forEach(btn => btn.addEventListener("click", () => {
     const label = btn.textContent.trim();
     if(label === "Save"){
-      btn.textContent = "Saved";
-      btn.classList.remove("secondary");
-      btn.classList.add("quiet");
-      showSystemToast("Saved to your shortlist","You can return to this opportunity from Saved.","Undo",()=>{
+      btn.textContent = "Unsave";
+      btn.dataset.saved = "true";
+      btn.setAttribute("aria-pressed","true");
+      btn.classList.add("secondary");
+      btn.classList.remove("quiet");
+      showSystemToast("Saved to your shortlist","This opportunity is now available under Saved.","Undo",()=>{
         btn.textContent="Save";
-        btn.classList.add("secondary");
-        btn.classList.remove("quiet");
+        btn.dataset.saved="false";
+        btn.setAttribute("aria-pressed","false");
+      });
+    } else if(label === "Unsave"){
+      btn.textContent = "Save";
+      btn.dataset.saved = "false";
+      btn.setAttribute("aria-pressed","false");
+      showSystemToast("Removed from Saved","The opportunity is no longer on your shortlist.","Undo",()=>{
+        btn.textContent="Unsave";
+        btn.dataset.saved="true";
+        btn.setAttribute("aria-pressed","true");
       });
     } else if(label === "Dismiss"){
       btn.textContent = "Dismissed";
