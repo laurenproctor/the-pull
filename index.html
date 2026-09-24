@@ -1400,6 +1400,50 @@
       .press-logo-wrap img{max-height:36px}
     }
   
+  
+    /* Discovery filter system */
+    .discovery-frame-card{padding:30px}
+    .discovery-frame-head{display:flex;align-items:flex-start;justify-content:space-between;gap:26px;margin-bottom:28px}
+    .discovery-frame-head h2{font-size:26px;margin-top:4px}
+    .discovery-filter-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:26px 30px}
+    .filter-group{min-width:0}
+    .filter-group-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:11px}
+    .filter-group label,.filter-group .filter-label{font-size:12px;font-weight:720;color:#59636d}
+    .filter-hint{font-size:10px;color:#929aa2}
+    .filter-chip-row{display:flex;gap:8px;flex-wrap:wrap}
+    .filter-chip{border:1px solid var(--line);background:#fff;color:#48515a;padding:9px 12px;border-radius:999px;font-size:12px;line-height:1.2;min-height:38px;transition:.15s}
+    .filter-chip:hover{border-color:#b8c0ba;background:#fafbfa}
+    .filter-chip.active{background:#173f34;color:#fff;border-color:#173f34}
+    .filter-chip.soft-active{background:#eef5f1;color:#214f3d;border-color:#cdded5}
+    .location-control{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px}
+    .location-control input{width:100%;border:1px solid var(--line);border-radius:13px;padding:13px 14px;font:inherit;background:#fff;color:var(--ink)}
+    .geo-scope{display:flex;gap:4px;padding:4px;border-radius:13px;background:#f0f2f0}
+    .geo-scope button{border:0;background:transparent;padding:9px 11px;border-radius:10px;font-size:11px;color:var(--muted);white-space:nowrap}
+    .geo-scope button.active{background:#fff;color:var(--ink);box-shadow:0 1px 4px rgba(0,0,0,.07)}
+    .freshness-control{display:flex;gap:6px;flex-wrap:wrap;padding:4px;border-radius:14px;background:#f0f2f0;width:max-content;max-width:100%}
+    .freshness-control button{border:0;background:transparent;color:var(--muted);padding:9px 13px;border-radius:11px;font-size:12px;white-space:nowrap}
+    .freshness-control button.active{background:#fff;color:#173f34;box-shadow:0 1px 5px rgba(0,0,0,.08);font-weight:700}
+    .discovery-filter-footer{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-top:24px;padding-top:20px;border-top:1px solid var(--line)}
+    .filter-summary{font-size:11px;color:var(--muted)}
+    .filter-summary strong{color:var(--ink)}
+    .advanced-discovery{margin-top:22px;border-top:1px solid var(--line);padding-top:18px}
+    .advanced-discovery summary{display:flex;align-items:center;justify-content:space-between;gap:12px;cursor:pointer;list-style:none;font-size:12px;font-weight:750;color:#3d4842}
+    .advanced-discovery summary::-webkit-details-marker{display:none}
+    .advanced-discovery summary:after{content:"＋";font-size:16px;font-weight:500}
+    .advanced-discovery[open] summary:after{content:"−"}
+    .advanced-filter-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px 30px;margin-top:22px}
+    .select-control{width:100%;border:1px solid var(--line);background:#fff;padding:13px 14px;border-radius:13px;color:var(--ink)}
+    .toggle-list{display:flex;flex-direction:column;gap:0;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+    .toggle-filter-row{display:flex;justify-content:space-between;gap:18px;align-items:center;padding:13px 14px;background:#fff;border-top:1px solid var(--line)}
+    .toggle-filter-row:first-child{border-top:0}
+    .toggle-filter-row strong{font-size:12px}.toggle-filter-row span{display:block;font-size:10px;color:var(--muted);margin-top:3px}
+    .mini-toggle{width:38px;height:22px;border:0;border-radius:999px;background:#d8ddda;position:relative;flex:0 0 auto}
+    .mini-toggle:after{content:"";position:absolute;width:16px;height:16px;border-radius:50%;background:#fff;top:3px;left:3px;box-shadow:0 1px 3px rgba(0,0,0,.14);transition:.15s}
+    .mini-toggle.active{background:#286a4c}.mini-toggle.active:after{left:19px}
+    .filter-reset{border:0;background:transparent;color:#5f6963;text-decoration:underline;text-underline-offset:3px;padding:7px;font-size:11px;font-weight:700}
+    @media(max-width:1000px){.discovery-frame-head{flex-direction:column}.discovery-filter-grid,.advanced-filter-grid{grid-template-columns:1fr}.location-control{grid-template-columns:1fr}.geo-scope{width:max-content}}
+    @media(max-width:680px){.discovery-frame-card{padding:22px}.discovery-frame-head{margin-bottom:24px}.discovery-frame-head .segmented{width:100%;overflow-x:auto;justify-content:flex-start}.discovery-frame-head .segmented button{white-space:nowrap}.freshness-control{width:100%}.freshness-control button{flex:1}.discovery-filter-footer{align-items:flex-start;flex-direction:column}.geo-scope{width:100%}.geo-scope button{flex:1}}
+  
   </style>
 </head>
 <body>
@@ -1710,20 +1754,154 @@
           <button class="button secondary" onclick="go('brief')">Adjust brief</button>
         </div>
 
-        <div class="card" style="margin-bottom:18px">
-          <div class="row start" style="margin-bottom:14px">
-            <div><div class="section-label">Discovery frame</div><h2>What kind of possibility are you looking for?</h2></div>
+        <div class="card discovery-frame-card" style="margin-bottom:24px">
+          <div class="discovery-frame-head">
+            <div><div class="section-label">Discovery frame</div><h2>What kind of possibility are you looking for?</h2><p class="muted small" style="margin-top:8px;line-height:1.55">Shape the opportunity set without forcing the system into one narrow category or signal.</p></div>
             <div class="segmented" id="discoveryMode">
               <button class="active" data-discovery-mode="closest">Natural fits</button>
               <button data-discovery-mode="interesting">Unexpected but right</button>
               <button data-discovery-mode="plausible">Commercial opportunities</button>
             </div>
           </div>
-          <div class="filters">
-            <div class="field"><label>Partner type</label><select><option>Hospitality + cultural venues</option></select></div>
-            <div class="field"><label>Neighborhood</label><select><option>Downtown Manhattan</option></select></div>
-            <div class="field"><label>Primary signal</label><select><option>Design + fashion affinity</option></select></div>
-            <div class="field"><label>Freshness</label><select><option>Recent signals prioritized</option></select></div>
+
+          <div class="discovery-filter-grid">
+            <div class="filter-group">
+              <div class="filter-group-head"><span class="filter-label">Partner categories</span><span class="filter-hint">Choose any</span></div>
+              <div class="filter-chip-row" data-filter-group="types">
+                <button class="filter-chip active" type="button" data-filter-value="hospitality">Hospitality</button>
+                <button class="filter-chip active" type="button" data-filter-value="arts-culture">Arts + culture</button>
+                <button class="filter-chip" type="button" data-filter-value="food-beverage">Food + beverage</button>
+                <button class="filter-chip" type="button" data-filter-value="fashion">Fashion + apparel</button>
+                <button class="filter-chip" type="button" data-filter-value="beauty-wellness">Beauty + wellness</button>
+                <button class="filter-chip" type="button" data-filter-value="media">Media + publishing</button>
+                <button class="filter-chip" type="button" data-filter-value="music-entertainment">Music + entertainment</button>
+                <button class="filter-chip" type="button" data-filter-value="sports">Sports + fitness</button>
+                <button class="filter-chip" type="button" data-filter-value="travel">Travel</button>
+                <button class="filter-chip" type="button" data-filter-value="retail">Retail</button>
+                <button class="filter-chip" type="button" data-filter-value="tech">Tech + AI</button>
+                <button class="filter-chip" type="button" data-filter-value="automotive">Automotive</button>
+              </div>
+            </div>
+
+            <div class="filter-group">
+              <div class="filter-group-head"><label for="discoveryLocation">Location</label><span class="filter-hint">Type a neighborhood, city, or market</span></div>
+              <div class="location-control">
+                <input id="discoveryLocation" list="discoveryLocationOptions" value="Downtown Manhattan" autocomplete="off">
+                <datalist id="discoveryLocationOptions">
+                  <option value="Downtown Manhattan"></option><option value="SoHo"></option><option value="NoHo"></option><option value="West Village"></option><option value="Lower East Side"></option><option value="Williamsburg"></option><option value="Brooklyn"></option><option value="New York City"></option><option value="Los Angeles"></option><option value="Miami"></option><option value="London"></option><option value="Paris"></option>
+                </datalist>
+                <div class="geo-scope" id="geoScope" aria-label="Geographic scope">
+                  <button type="button" data-geo-scope="neighborhood">Neighborhood</button>
+                  <button class="active" type="button" data-geo-scope="market">City / market</button>
+                  <button type="button" data-geo-scope="anywhere">Anywhere</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="filter-group">
+              <div class="filter-group-head"><span class="filter-label">Signals to prioritize</span><span class="filter-hint">Multi-select</span></div>
+              <div class="filter-chip-row" data-filter-group="signals">
+                <button class="filter-chip active" type="button" data-filter-value="design">Design / aesthetic affinity</button>
+                <button class="filter-chip active" type="button" data-filter-value="audience">Audience overlap</button>
+                <button class="filter-chip" type="button" data-filter-value="culture">Cultural affinity</button>
+                <button class="filter-chip" type="button" data-filter-value="customer-behavior">Customer behavior</button>
+                <button class="filter-chip" type="button" data-filter-value="social">Social adjacency</button>
+                <button class="filter-chip" type="button" data-filter-value="search">Search co-interest</button>
+                <button class="filter-chip" type="button" data-filter-value="editorial">Press / editorial potential</button>
+                <button class="filter-chip" type="button" data-filter-value="distribution">Distribution fit</button>
+                <button class="filter-chip" type="button" data-filter-value="product">Product complementarity</button>
+                <button class="filter-chip" type="button" data-filter-value="timing">Timing / launch trigger</button>
+              </div>
+            </div>
+
+            <div class="filter-group">
+              <div class="filter-group-head"><span class="filter-label">Signal freshness</span><span class="filter-hint">How current should evidence be?</span></div>
+              <div class="freshness-control" id="freshnessControl">
+                <button type="button" data-freshness="30d">30 days</button>
+                <button class="active" type="button" data-freshness="90d">90 days</button>
+                <button type="button" data-freshness="12m">12 months</button>
+                <button type="button" data-freshness="any">Any time</button>
+              </div>
+            </div>
+          </div>
+
+          <details class="advanced-discovery">
+            <summary><span>Advanced discovery settings</span><span class="filter-summary" id="advancedFilterSummary">No advanced filters applied</span></summary>
+            <div class="advanced-filter-grid">
+              <div class="filter-group">
+                <div class="filter-group-head"><span class="filter-label">Opportunity formats</span><span class="filter-hint">What could they make together?</span></div>
+                <div class="filter-chip-row" data-filter-group="formats">
+                  <button class="filter-chip" type="button" data-filter-value="product">Product / capsule</button>
+                  <button class="filter-chip" type="button" data-filter-value="experience">Physical experience</button>
+                  <button class="filter-chip" type="button" data-filter-value="event">Event</button>
+                  <button class="filter-chip" type="button" data-filter-value="hospitality">Hospitality ritual</button>
+                  <button class="filter-chip" type="button" data-filter-value="content">Content / editorial</button>
+                  <button class="filter-chip" type="button" data-filter-value="distribution">Distribution</button>
+                  <button class="filter-chip" type="button" data-filter-value="service">Service</button>
+                  <button class="filter-chip" type="button" data-filter-value="community">Community program</button>
+                </div>
+              </div>
+
+              <div class="filter-group">
+                <div class="filter-group-head"><label for="evidenceThreshold">Evidence threshold</label><span class="filter-hint">How speculative can discovery be?</span></div>
+                <select class="select-control" id="evidenceThreshold">
+                  <option value="balanced" selected>Balanced — evidence + creative possibility</option>
+                  <option value="verified">Verified public evidence required</option>
+                  <option value="strong">Strong evidence preferred</option>
+                  <option value="emerging">Emerging signals are acceptable</option>
+                  <option value="exploratory">Exploratory — show smart weak signals too</option>
+                </select>
+              </div>
+
+              <div class="filter-group">
+                <div class="filter-group-head"><span class="filter-label">Partner scale</span><span class="filter-hint">Relative to Brand A</span></div>
+                <div class="filter-chip-row single-select-filter" data-filter-group="scale">
+                  <button class="filter-chip active" type="button" data-filter-value="any">Any size</button>
+                  <button class="filter-chip" type="button" data-filter-value="smaller">Smaller / emerging</button>
+                  <button class="filter-chip" type="button" data-filter-value="peer">Peer</button>
+                  <button class="filter-chip" type="button" data-filter-value="larger">Larger / established</button>
+                </div>
+              </div>
+
+              <div class="filter-group">
+                <div class="filter-group-head"><span class="filter-label">Partner should contribute</span><span class="filter-hint">Strategic assets</span></div>
+                <div class="filter-chip-row" data-filter-group="contributions">
+                  <button class="filter-chip" type="button" data-filter-value="audience">Audience</button>
+                  <button class="filter-chip" type="button" data-filter-value="venue">Physical space</button>
+                  <button class="filter-chip" type="button" data-filter-value="distribution">Distribution</button>
+                  <button class="filter-chip" type="button" data-filter-value="product">Product capability</button>
+                  <button class="filter-chip" type="button" data-filter-value="credibility">Cultural credibility</button>
+                  <button class="filter-chip" type="button" data-filter-value="media">Content / media</button>
+                  <button class="filter-chip" type="button" data-filter-value="technology">Technology</button>
+                  <button class="filter-chip" type="button" data-filter-value="community">Community</button>
+                </div>
+              </div>
+
+              <div class="filter-group">
+                <div class="filter-group-head"><label for="collaborationHistory">Collaboration history</label><span class="filter-hint">Prior brand behavior</span></div>
+                <select class="select-control" id="collaborationHistory">
+                  <option value="any" selected>No preference</option>
+                  <option value="first-time">Prefer brands Brand A has never partnered with</option>
+                  <option value="proven">Prefer brands with successful collaboration history</option>
+                  <option value="active">Prefer brands actively collaborating now</option>
+                  <option value="repeat">Allow repeat / existing partners</option>
+                </select>
+              </div>
+
+              <div class="filter-group">
+                <div class="filter-group-head"><span class="filter-label">Exclusions</span><span class="filter-hint">Keep noise out</span></div>
+                <div class="toggle-list">
+                  <div class="toggle-filter-row"><div><strong>Direct competitors</strong><span>Exclude brands that compete directly with Brand A.</span></div><button class="mini-toggle active" type="button" data-exclusion="competitors" aria-pressed="true"></button></div>
+                  <div class="toggle-filter-row"><div><strong>Previously dismissed</strong><span>Keep dismissed recommendations out of this discovery set.</span></div><button class="mini-toggle active" type="button" data-exclusion="dismissed" aria-pressed="true"></button></div>
+                  <div class="toggle-filter-row"><div><strong>Inactive / weak public presence</strong><span>Exclude brands with too little current evidence to evaluate.</span></div><button class="mini-toggle" type="button" data-exclusion="inactive" aria-pressed="false"></button></div>
+                </div>
+              </div>
+            </div>
+          </details>
+
+          <div class="discovery-filter-footer">
+            <div class="filter-summary" id="discoveryFilterSummary"><strong>6 active filters</strong> · Hospitality + arts/culture · Downtown Manhattan · 90-day signals</div>
+            <button class="filter-reset" id="resetDiscoveryFilters" type="button">Reset discovery settings</button>
           </div>
         </div>
 
