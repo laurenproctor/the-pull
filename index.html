@@ -2503,6 +2503,75 @@ Then canonicalize URL, publisher, date and syndication family.</div></div>
   document.getElementById("closeEvidence").addEventListener("click", () => setEvidenceDrawer(false));
   evidenceBackdrop.addEventListener("click", () => setEvidenceDrawer(false));
 
+  // NN/g: visible system status, reversible actions, and progressive disclosure.
+  const systemToast=document.getElementById("systemToast");
+  const systemToastTitle=document.getElementById("systemToastTitle");
+  const systemToastMessage=document.getElementById("systemToastMessage");
+  const systemToastAction=document.getElementById("systemToastAction");
+  let systemToastTimer=null;
+  let systemToastUndo=null;
+
+  function showSystemToast(title,message,undoLabel=null,undoFn=null){
+    if(!systemToast) return;
+    systemToastTitle.textContent=title;
+    systemToastMessage.textContent=message;
+    systemToastUndo=undoFn;
+    systemToastAction.textContent=undoLabel||"Undo";
+    systemToastAction.classList.toggle("hidden",!undoFn);
+    systemToast.classList.remove("hidden");
+    clearTimeout(systemToastTimer);
+    systemToastTimer=setTimeout(()=>systemToast.classList.add("hidden"),5000);
+  }
+
+  systemToastAction?.addEventListener("click",()=>{
+    if(systemToastUndo) systemToastUndo();
+    systemToastUndo=null;
+    systemToast.classList.add("hidden");
+  });
+
+  document.querySelectorAll(".context-strip").forEach(strip=>{
+    if(strip.closest("details.page-help")) return;
+    const details=document.createElement("details");
+    details.className="page-help";
+    const summary=document.createElement("summary");
+    summary.textContent="Why this screen works this way";
+    strip.parentNode.insertBefore(details,strip);
+    details.appendChild(summary);
+    details.appendChild(strip);
+  });
+
+  document.querySelectorAll(".save-draft-action").forEach(btn=>btn.addEventListener("click",()=>{
+    const previous=btn.textContent;
+    btn.textContent="Saved";
+    btn.classList.add("quiet");
+    showSystemToast("Draft saved","Your collaboration brief is saved in this prototype.","Undo",()=>{
+      btn.textContent=previous;
+      btn.classList.remove("quiet");
+    });
+  }));
+
+  document.getElementById("beginDiscovery")?.addEventListener("click",()=>{
+    const field=document.getElementById("worthDoingField");
+    const input=document.getElementById("worthDoingInput");
+    if(input && !input.value.trim()){
+      field?.classList.add("has-error");
+      input.setAttribute("aria-invalid","true");
+      input.focus();
+      showSystemToast("One item needs attention","Define what would make this collaboration worth doing before discovery.");
+      return;
+    }
+    field?.classList.remove("has-error");
+    input?.removeAttribute("aria-invalid");
+    go("discover");
+  });
+
+  document.getElementById("worthDoingInput")?.addEventListener("input",e=>{
+    if(e.target.value.trim()){
+      document.getElementById("worthDoingField")?.classList.remove("has-error");
+      e.target.removeAttribute("aria-invalid");
+    }
+  });
+
   document.querySelectorAll("#objectiveChoices .choice").forEach(btn => btn.addEventListener("click", () => {
     document.querySelectorAll("#objectiveChoices .choice").forEach(x => x.classList.remove("active"));
     btn.classList.add("active");
