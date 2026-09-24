@@ -1455,6 +1455,26 @@
     @media(max-width:900px){.route-chip{order:3;width:100%;max-width:none}.topbar-right{flex-wrap:wrap}.route-chip-path{flex:1}}
     @media(max-width:620px){.route-chip{display:none}}
   
+  
+    /* Social evidence split */
+    .social-evidence-block{margin-top:22px}
+    .social-subhead{display:flex;justify-content:space-between;gap:18px;align-items:flex-end;margin:26px 0 12px}
+    .social-subhead:first-child{margin-top:0}
+    .social-subhead h4{font-size:18px;margin:4px 0 0;letter-spacing:-.02em}
+    .social-subhead p{font-size:12px;line-height:1.5;color:var(--muted);margin-top:5px;max-width:720px}
+    .social-post-card{background:#fff;border:1px solid rgba(16,24,40,.08);border-radius:20px;padding:20px;display:flex;flex-direction:column;min-height:250px;box-shadow:0 8px 24px rgba(15,23,42,.045)}
+    .social-post-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}
+    .social-post-author{display:flex;align-items:center;gap:11px;min-width:0}
+    .social-platform-badge{width:38px;height:38px;border-radius:11px;background:#111418;color:#fff;display:grid;place-items:center;font-size:11px;font-weight:820;flex:0 0 auto}
+    .social-post-author strong{display:block;font-size:13px}.social-post-author span{display:block;font-size:10px;color:var(--muted);margin-top:2px}
+    .social-post-quote{font-size:15px;line-height:1.62;color:#252c31;margin:20px 0 16px}
+    .social-post-tags{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:16px}
+    .social-post-source{margin-top:auto;padding-top:15px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:12px;align-items:flex-end}
+    .social-post-source small{font-size:10px;line-height:1.45;color:var(--muted);max-width:74%}
+    .social-post-source a{font-size:11px;font-weight:750;color:#285342;text-decoration:underline;text-underline-offset:3px;white-space:nowrap}
+    .social-evidence-note{margin-top:14px;padding:13px 15px;border:1px solid var(--line);border-radius:13px;background:#fafbfa;font-size:11px;line-height:1.55;color:var(--muted)}
+    @media(max-width:900px){.social-subhead{align-items:flex-start;flex-direction:column}.social-post-card{min-height:0}}
+  
   </style>
 </head>
 <body>
@@ -2508,8 +2528,14 @@
               <div class="study-section-head"><div><div class="section-label">Campaign visuals</div><h3>See what actually shipped.</h3><p>Official product and campaign imagery anchors the study in the thing customers were shown—not only in the write-up about it.</p></div><span class="source-pill" id="gallerySourcePill">Official product pages</span></div>
               <div class="study-gallery" id="studyGallery"></div>
 
-              <div class="study-section-head"><div><div class="section-label">Owned media</div><h3>Owned social + brand-channel previews</h3><p>These are the formats the brands used to invite participation and explain the launch. Engagement values are only shown when they were captured directly.</p></div><span class="source-pill">Owned handles + official pages</span></div>
-              <div class="social-preview-grid" id="studySocial"></div>
+              <div class="study-section-head"><div><div class="section-label">Social evidence</div><h3>What the brands published—and what people said back.</h3><p>Owned posts and public conversation are separate evidence sets. They should never share one engagement denominator.</p></div><span class="source-pill">Owned + conversation</span></div>
+              <div class="social-evidence-block">
+                <div class="social-subhead"><div><div class="section-label">Brand-owned posts</div><h4>Posts published by the brands or their corporate owners</h4><p>Canonical brand channels where available. A profile/feed URL is labeled when the collector could not recover a durable post permalink.</p></div><span class="pill good">Owned</span></div>
+                <div class="social-preview-grid" id="studyOwnedSocial"></div>
+                <div class="social-subhead"><div><div class="section-label">Conversation / earned</div><h4>Posts from people and organizations outside the two brands</h4><p>Entrant replies, community commentary, distributor amplification, and other public conversation about the collaboration.</p></div><span class="pill info">Public conversation</span></div>
+                <div class="social-preview-grid" id="studyConversationSocial"></div>
+                <div class="social-evidence-note" id="studySocialCoverageNote">Coverage reflects posts that were publicly discoverable in this research pass. Missing or inaccessible platform content is not treated as zero conversation.</div>
+              </div>
 
               <div class="study-section-head"><div><div class="section-label">Public metrics</div><h3>What the public record gives us</h3><p>These are campaign facts and launch metrics visible from public materials. They are useful context, not performance proof.</p></div><span class="source-pill">Observed + partner-stated</span></div>
               <div class="metric-family-grid" id="publicMetricFamilies"></div>
@@ -2884,11 +2910,55 @@ and never merge owned-media metrics with public-conversation metrics.</div></div
         {img:"https://www.dickies.com/cdn/shop/files/DI083C48-A1.jpg?v=1789075889",fallback:"https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1200&q=80",title:"Classic Delivery Graphic T-Shirt",copy:"Official Dickies imagery using Clydesdale/wagon brand codes. The product page listed this tee at $25."},
         {img:"https://www.dickies.com/cdn/shop/files/DI083C48-A4.jpg?v=1789075889",fallback:"https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1200&q=80",title:"Product-detail view",copy:"Official product photography helps preserve the visual language used at launch without treating the image itself as a performance signal."}
       ],
-      social:[
-        {badge:"IG/X",handle:"@BudweiserUSA",title:"Genuinely Earned nomination prompt",img:"https://www.dickies.com/cdn/shop/files/DI083C48-A7.jpg?v=1789075889",fallback:"https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1200&q=80",copy:"Launch coverage confirms nominations were solicited through Budweiser and Dickies social channels using #GenuinelyEarned and #Contest. This prototype uses official product imagery because a durable canonical post-media asset was not verified.",engagement:["Post engagement: not captured","Contest window: Sep 15–21","Evidence: launch coverage + official rules URL"]},
-        {badge:"IG",handle:"@Dickies",title:"Owned launch support",img:"https://www.dickies.com/cdn/shop/files/DI0890DN-FR.jpg?v=1789075889",fallback:"https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1200&q=80",copy:"Dickies’ official product pages provide the durable visual source. A production collector should capture canonical social post IDs separately rather than infer them from press embeds.",engagement:["Handle verified","Post ID: collect in production","No invented likes/comments"]},
-        {badge:"WEB",handle:"Dickies.com",title:"Shoppable launch surface",img:"https://www.dickies.com/cdn/shop/files/DI083C48-FR.jpg?v=1789075889",fallback:"https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1200&q=80",copy:"Product pages are the strongest first-party source for prices, product descriptions and campaign imagery.",engagement:["Tier A source","Retail pricing verified","Commerce outcome: unknown"]}
+      ownedSocial:[
+        {
+          platform:"LinkedIn",
+          badge:"in",
+          handle:"Anheuser-Busch",
+          accountRole:"Corporate owner · Budweiser",
+          quote:"Built for those who earn it. Budweiser teamed up with Dickies to create a limited-edition jacket inspired by the people who show up…",
+          tags:["#GenuinelyEarned","Brand-owned"],
+          sourceUrl:"https://www.linkedin.com/company/anheuser-busch/",
+          sourceType:"Public LinkedIn company feed",
+          captureNote:"Actual post observed on the public company feed. Current collector exposed the feed, not a durable individual-post permalink."
+        }
       ],
+      conversationSocial:[
+        {
+          platform:"X",
+          badge:"X",
+          handle:"@open_brady",
+          accountRole:"Contest entrant",
+          quote:"My neighbor works long shifts keeping our community clean and always helps others—this jacket would be a well-earned thank-you!",
+          tags:["#GenuinelyEarned","#Contest"],
+          sourceUrl:"https://www6.twstalker.com/open_brady",
+          sourceType:"Third-party public X mirror",
+          captureNote:"Actual entrant post text observed through a public mirror; direct X permalink was not exposed by the current collector."
+        },
+        {
+          platform:"X",
+          badge:"X",
+          handle:"@CindisParadise",
+          accountRole:"Contest entrant",
+          quote:"@budweiserusa @Dickies #GenuinelyEarned #Contest Perfect for @BensWildPitch",
+          tags:["#GenuinelyEarned","#Contest"],
+          sourceUrl:"https://www6.twstalker.com/CindisParadise",
+          sourceType:"Third-party public X mirror",
+          captureNote:"Actual entrant post text observed through a public mirror; treat mirror metadata as provisional."
+        },
+        {
+          platform:"LinkedIn",
+          badge:"in",
+          handle:"Straub Distributing",
+          accountRole:"Distributor / amplification",
+          quote:"Dickies® and Budweiser created limited-edition jackets that money can't buy. Only hard work can.",
+          tags:["#Budweiser","Earned amplification"],
+          sourceUrl:"https://www.linkedin.com/company/straub-distributing/",
+          sourceType:"Public LinkedIn company feed",
+          captureNote:"Public post discussing the collaboration from an Anheuser-Busch distributor, not from Budweiser or Dickies."
+        }
+      ],
+      socialCoverageNote:"The contest required #GenuinelyEarned and #Contest on eligible social entries. This view shows only posts recoverable from public web sources during this research pass; private, deleted, non-indexed, or platform-blocked posts remain unknown.",
       metricFamilies:[
         {title:"Launch facts",note:"Publicly verifiable campaign structure, not effectiveness metrics.",lines:[{name:"First drop",value:"Sep 15, 2026",meta:"Public release date"},{name:"Collection size",value:"52 pieces",meta:"Men’s + women’s styles"},{name:"Second drop",value:"November",meta:"Announced follow-up"}]},
         {title:"Participation",note:"The community mechanic layered a nomination story onto the retail drop.",lines:[{name:"Limited jacket prizes",value:"100",meta:"Genuinely Earned contest"},{name:"Contest end",value:"Sep 21",meta:"U.S. 21+ eligibility"},{name:"Hashtags",value:"#GenuinelyEarned",meta:"#Contest also required"}]},
@@ -3050,7 +3120,10 @@ and never merge owned-media metrics with public-conversation metrics.</div></div
     const hero=document.getElementById('studyHeroArt');if(hero){hero.style.backgroundImage=s.heroImage?`url(\"${s.heroImage}\"), url(\"${s.fallbackImage}\")`:`url(\"${s.fallbackImage}\")`;hero.dataset.sourceUrl=s.heroImage||'';hero.classList.add('real')}
     const kpis=document.getElementById('studyKpis');if(kpis)kpis.innerHTML=(s.kpis||[]).map(k=>`<div class="study-kpi"><span>${k.label}</span><strong>${k.value}</strong><small>${k.note}</small></div>`).join('');
     const gallery=document.getElementById('studyGallery');if(gallery)gallery.innerHTML=(s.gallery&&s.gallery.length)?s.gallery.map(g=>`<div class="study-image-card"><img src="${s.fallbackImage}" data-source-url="${g.img}" alt="${g.title}" loading="lazy"><div class="body"><span class="source-pill">Prototype photo · source linked</span><strong style="display:block;margin-top:8px">${g.title}</strong><p class="muted small" style="margin-top:8px">${g.copy}</p></div></div>`).join(''):`<div class="study-empty" style="grid-column:1/-1">No verified visual asset attached.</div>`;
-    const social=document.getElementById('studySocial');if(social)social.innerHTML=(s.social&&s.social.length)?s.social.map(p=>`<div class="social-preview-card"><div class="social-preview-head"><div class="social-handle"><div class="social-badge">${p.badge}</div><div><strong>${p.handle}</strong><div class="muted small">${p.title}</div></div></div><span class="pill">Owned/context</span></div><div class="social-preview-thumb"><img src="${s.fallbackImage}" data-source-url="${p.img}" alt="${p.title}" loading="lazy"></div><div class="social-preview-body"><span class="source-pill">Prototype photo · source linked</span><p class="muted small" style="margin-top:8px">${p.copy}</p><div class="engagement-row">${(p.engagement||[]).map(e=>`<span class="engagement-pill">${e}</span>`).join('')}</div></div></div>`).join(''):`<div class="study-empty" style="grid-column:1/-1">No verified owned-media source attached.</div>`;
+    const renderSocialPost=p=>`<article class="social-post-card"><div class="social-post-head"><div class="social-post-author"><div class="social-platform-badge">${p.badge||p.platform}</div><div><strong>${p.handle}</strong><span>${p.platform} · ${p.accountRole||""}</span></div></div><span class="pill">${p.platform}</span></div><div class="social-post-quote">“${p.quote}”</div><div class="social-post-tags">${(p.tags||[]).map(t=>`<span class="tag">${t}</span>`).join('')}</div><div class="social-post-source"><small><strong>${p.sourceType||"Public source"}.</strong> ${p.captureNote||""}</small><a href="${p.sourceUrl}" target="_blank" rel="noopener noreferrer">Open source ↗</a></div></article>`;
+    const owned=document.getElementById('studyOwnedSocial');const ownedPosts=s.ownedSocial||s.social||[];if(owned)owned.innerHTML=ownedPosts.length?ownedPosts.map(p=>p.quote?renderSocialPost(p):`<article class="social-post-card"><div class="social-post-head"><div class="social-post-author"><div class="social-platform-badge">${p.badge}</div><div><strong>${p.handle}</strong><span>Owned/context</span></div></div></div><div class="social-post-quote">${p.copy}</div><div class="social-post-tags">${(p.engagement||[]).map(e=>`<span class="tag">${e}</span>`).join('')}</div></article>`).join(''):`<div class="study-empty" style="grid-column:1/-1">No verified brand-owned post recovered.</div>`;
+    const conversation=document.getElementById('studyConversationSocial');const conversationPosts=s.conversationSocial||[];if(conversation)conversation.innerHTML=conversationPosts.length?conversationPosts.map(renderSocialPost).join(''):`<div class="study-empty" style="grid-column:1/-1">No public conversation posts recovered in this source pack.</div>`;
+    const socialNote=document.getElementById('studySocialCoverageNote');if(socialNote)socialNote.textContent=s.socialCoverageNote||"Coverage reflects publicly discoverable posts from this research pass; missing content is not zero conversation.";
     const fam=document.getElementById('publicMetricFamilies');if(fam)fam.innerHTML=(s.metricFamilies||[]).map(f=>`<div class="metric-family"><h3>${f.title}</h3><div class="family-note">${f.note}</div>${(f.lines||[]).map(l=>`<div class="obs-metric-line"><span class="name">${l.name}</span><span class="value">${l.value}</span><span class="meta">${l.meta}</span></div>`).join('')}</div>`).join('');
     const press=document.getElementById('studyPress');if(press)press.innerHTML=(s.press&&s.press.length)?s.press.map((p,i)=>`<a class="press-preview-card" href="${p.link}" target="_blank" rel="noopener noreferrer"><div class="press-preview-image" style="background-image:url('${p.img || ((s.gallery&&s.gallery.length)?s.gallery[i%s.gallery.length].img:s.heroImage)}')"></div><div class="press-preview-body"><div class="press-brand-row"><div class="press-logo-wrap">${p.logo?`<img src="${p.logo}" alt="${p.pub} logo" loading="lazy">`:`<span class="press-logo-fallback">${p.pub}</span>`}</div><span class="pill">${p.date}</span></div><h4>${p.title}</h4><p>${p.summary}</p><div class="press-read-row"><span>Read coverage</span><span>↗</span></div></div></a>`).join(''):`<div class="study-empty" style="grid-column:1/-1">No validated press cards attached.</div>`;
     const facts=document.getElementById('studyFacts');if(facts)facts.innerHTML=(s.facts||[]).map(([a,b])=>`<div class="baseline-item"><span>${a}</span><span class="state">${b}</span></div>`).join('');
