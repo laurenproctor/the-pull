@@ -1683,6 +1683,155 @@
       .workspace-label strong{font-size:12px}
     }
   
+  
+    /* Mobile navigation refinement */
+    .mobile-nav-tools{display:none}
+    @media(max-width:700px){
+      .topbar{
+        min-height:64px!important;
+        padding:9px 12px!important;
+        display:grid!important;
+        grid-template-columns:44px minmax(0,1fr) 44px!important;
+        grid-template-rows:auto!important;
+        gap:9px!important;
+        align-items:center!important;
+      }
+      .mobile-nav-toggle{grid-column:1!important;grid-row:1!important;order:0!important;width:44px;height:44px}
+      .workspace-label{
+        grid-column:2!important;
+        grid-row:1!important;
+        order:0!important;
+        width:100%!important;
+        justify-content:center!important;
+        text-align:center!important;
+        overflow:hidden;
+      }
+      .workspace-label strong{
+        font-size:13px!important;
+        overflow:hidden;
+        text-overflow:ellipsis;
+        white-space:nowrap;
+      }
+      .workspace-label span{display:none!important}
+      .topbar-right{
+        display:contents!important;
+        width:auto!important;
+      }
+      .topbar-right>.role-picker,
+      .topbar-right>.project-chip,
+      .topbar-right>.route-chip{display:none!important}
+      .topbar-right>.profile-chip{
+        grid-column:3!important;
+        grid-row:1!important;
+        justify-self:end!important;
+        width:44px!important;
+        height:44px!important;
+        padding:4px!important;
+        border-radius:50%!important;
+      }
+      .topbar-right>.profile-chip .profile-avatar{width:34px;height:34px}
+      .topbar-right>.profile-chip-copy{display:none!important}
+
+      .sidebar{
+        width:min(350px,92vw)!important;
+        padding-inline:16px!important;
+      }
+      .sidebar>.brand{
+        position:sticky;
+        top:0;
+        z-index:2;
+        background:#0f1114;
+        padding:2px 0 12px;
+        margin:0!important;
+      }
+      .sidebar .side-label{margin-top:4px}
+      .side-nav button,.project-nav button,.client-side-nav button{
+        min-height:48px!important;
+        border-radius:12px!important;
+        padding:12px 13px!important;
+        font-size:13px!important;
+      }
+      .side-nav .badge,.project-nav .badge,.client-side-nav .badge{flex:0 0 auto}
+
+      .mobile-nav-tools{
+        display:block;
+        margin-top:8px;
+        padding-top:18px;
+        border-top:1px solid #2a3035;
+      }
+      .mobile-nav-tools .side-label{margin-left:4px}
+      .mobile-nav-context{
+        display:flex;
+        flex-direction:column;
+        gap:10px;
+      }
+      .mobile-nav-field{
+        display:flex;
+        flex-direction:column;
+        gap:6px;
+      }
+      .mobile-nav-field label{
+        font-size:9px;
+        text-transform:uppercase;
+        letter-spacing:.09em;
+        color:#8f98a3;
+        font-weight:760;
+      }
+      .mobile-nav-field select{
+        width:100%;
+        min-height:44px;
+        border:1px solid #30363d;
+        background:#171a1e;
+        color:#fff;
+        border-radius:11px;
+        padding:10px 12px;
+      }
+      .mobile-route-row{
+        display:flex;
+        align-items:center;
+        gap:7px;
+        border:1px solid #30363d;
+        background:#171a1e;
+        border-radius:11px;
+        padding:7px 7px 7px 11px;
+        min-width:0;
+      }
+      .mobile-route-path{
+        flex:1;
+        min-width:0;
+        overflow:hidden;
+        text-overflow:ellipsis;
+        white-space:nowrap;
+        color:#bfc6cc;
+        font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+        font-size:10px;
+      }
+      .mobile-route-copy{
+        border:0;
+        min-height:34px;
+        background:#262c31;
+        color:#fff;
+        border-radius:8px;
+        padding:7px 9px;
+        font-size:10px;
+        font-weight:750;
+      }
+      .mobile-context-copy{
+        padding:11px 12px;
+        border:1px solid #30363d;
+        background:#171a1e;
+        border-radius:11px;
+      }
+      .mobile-context-copy strong{display:block;font-size:12px;color:#fff}
+      .mobile-context-copy span{display:block;font-size:10px;color:#8f98a3;margin-top:3px;line-height:1.4}
+      .sidebar-footer{padding-bottom:calc(8px + env(safe-area-inset-bottom))}
+    }
+
+    @media(max-width:390px){
+      .sidebar{width:94vw!important}
+      .topbar{padding-inline:10px!important}
+    }
+  
   </style>
 </head>
 <body>
@@ -1731,6 +1880,26 @@
       <div class="client-role-card">
         <strong id="sidebarClientBrand">BRUT</strong>
         <p>Partner Studio manages execution. You see the decisions, shared commitments, and results that matter.</p>
+      </div>
+    </div>
+
+
+    <div class="mobile-nav-tools" id="mobileNavTools">
+      <div class="side-label">Account & context</div>
+      <div class="mobile-nav-context">
+        <div class="mobile-context-copy"><strong id="mobileContextTitle">BRUT × FAUX</strong><span id="mobileContextMeta">Opportunity 03</span></div>
+        <div class="mobile-nav-field">
+          <label for="mobileRoleSelect">Preview as</label>
+          <select id="mobileRoleSelect" aria-label="Preview prototype as">
+            <option value="admin">Partner Studio Admin — Lauren</option>
+            <option value="brut">BRUT — Brand Manager</option>
+            <option value="faux">FAUX — Brand Manager</option>
+          </select>
+        </div>
+        <div class="mobile-nav-field">
+          <label>Current page</label>
+          <div class="mobile-route-row"><span class="mobile-route-path" id="mobileRoutePath">/app/discover</span><button class="mobile-route-copy" id="mobileCopyRoute" type="button">Copy link</button></div>
+        </div>
       </div>
     </div>
 
