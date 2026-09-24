@@ -1316,6 +1316,20 @@
     @media(max-width:980px){.profile-layout{grid-template-columns:1fr}.profile-side{display:grid;grid-template-columns:1fr 1fr}.brand-preview{grid-template-columns:1fr}}
     @media(max-width:680px){.profile-chip-copy{display:none}.profile-chip{padding:5px}.profile-page-head{flex-direction:column}.profile-form-grid,.profile-side{grid-template-columns:1fr}.profile-section{padding:22px}.avatar-editor{grid-template-columns:1fr}.avatar-large{width:76px;height:76px}.password-state{align-items:flex-start;flex-direction:column}.brand-import-actions{align-items:stretch;flex-direction:column}.brand-import-actions .field{min-width:0}.theme-token{grid-template-columns:1fr;gap:4px}}    
 
+  
+    /* Applied organization theme overrides */
+    :root{--brand-primary:#111418;--brand-accent:#1f6544;--brand-surface:#f6f6f3;--brand-on-primary:#ffffff}
+    body.brand-theme-active .sidebar{background:var(--brand-primary)}
+    body.brand-theme-active .side-nav button.active,
+    body.brand-theme-active .project-nav button.active,
+    body.brand-theme-active .client-side-nav button.active{background:color-mix(in srgb,var(--brand-primary) 72%,white 28%)}
+    body.brand-theme-active .button:not(.secondary):not(.ghost):not(.danger):not(.observatory){background:var(--brand-primary);color:var(--brand-on-primary)}
+    body.brand-theme-active .admin-stage-bar span,
+    body.brand-theme-active .client-progress-step.done span{background:var(--brand-accent)}
+    body.brand-theme-active .project-dot{background:var(--brand-accent)}
+    body.brand-theme-active .profile-avatar,
+    body.brand-theme-active .avatar-large{background-color:var(--brand-primary)}
+  
   </style>
 </head>
 <body>
@@ -2489,6 +2503,7 @@ and never merge owned-media metrics with public-conversation metrics.</div></div
 
   function go(name){
     if(currentRole !== "admin") return;
+    currentAdminScreen=name;
     document.getElementById("clientPortal")?.classList.add("hidden");
     screens.forEach(s => document.getElementById("screen-"+s).classList.toggle("hidden", s !== name));
     document.querySelectorAll("[data-screen]").forEach(btn => btn.classList.toggle("active", btn.dataset.screen === name));
@@ -2886,6 +2901,156 @@ and never merge owned-media metrics with public-conversation metrics.</div></div
   });
 
 
+
+  // Universal user profile prototype.
+  let currentAdminScreen="discover";
+  let profileReturnRole="admin";
+  let profileReturnClientScreen="home";
+
+  const profileRoleConfig={
+    admin:{first:"Lauren",last:"Proctor",username:"lauren",email:"lauren@thepull.example",title:"Founder · Partner Studio",org:"The Pull",role:"Studio admin",site:"https://thepullpartnerships.netlify.app",initials:"LP"},
+    brut:{first:"Alex",last:"Morgan",username:"alex.brut",email:"alex@brut.example",title:"Brand Manager",org:"BRUT",role:"Brand manager",site:"https://brut-clothing.us/",initials:"AM"},
+    faux:{first:"Maya",last:"Chen",username:"maya.faux",email:"maya@faux.example",title:"Partnerships Lead",org:"FAUX",role:"Brand manager",site:"",initials:"MC"}
+  };
+
+  function renderProfileForRole(role){
+    const p=profileRoleConfig[role]||profileRoleConfig.admin;
+    const values={
+      profileFirstName:p.first,profileLastName:p.last,profileUsername:p.username,
+      profileEmail:p.email,profileTitle:p.title,brandWebsiteUrl:p.site
+    };
+    Object.entries(values).forEach(([id,val])=>{const el=document.getElementById(id);if(el)el.value=val});
+    const org=document.getElementById("profileOrgName");if(org)org.textContent=p.org;
+    const rp=document.getElementById("profileRolePill");if(rp)rp.textContent=p.role;
+    const av=document.getElementById("profileAvatarPreview");if(av && !av.style.backgroundImage)av.textContent=p.initials;
+    const tav=document.getElementById("topProfileAvatar");if(tav && !tav.style.backgroundImage)tav.textContent=p.initials;
+    const tn=document.getElementById("topProfileName");if(tn)tn.textContent=p.first;
+  }
+
+  function openProfile(){
+    profileReturnRole=currentRole;
+    profileReturnClientScreen=currentClientScreen;
+    document.querySelectorAll(".screen").forEach(s=>s.classList.add("hidden"));
+    document.getElementById("clientPortal")?.classList.add("hidden");
+    document.getElementById("opportunityBar")?.classList.add("hidden");
+    document.getElementById("screenTabs")?.classList.add("hidden");
+    document.getElementById("permissionStrip")?.classList.add("hidden");
+    document.getElementById("profileScreen")?.classList.remove("hidden");
+    const wl=document.getElementById("workspaceLabel");if(wl)wl.innerHTML="<strong>Account</strong><span>Profile</span>";
+    const ct=document.getElementById("contextTitle");if(ct)ct.textContent="Profile";
+    const cm=document.getElementById("contextMeta");if(cm)cm.textContent="Account settings";
+    renderProfileForRole(currentRole);
+    window.scrollTo({top:0,behavior:"smooth"});
+  }
+
+  function closeProfile(){
+    document.getElementById("profileScreen")?.classList.add("hidden");
+    if(profileReturnRole==="admin"){
+      go(currentAdminScreen||"discover");
+    }else{
+      document.getElementById("clientPortal")?.classList.remove("hidden");
+      renderClientRole(profileReturnRole);
+      showClient(profileReturnClientScreen||"home");
+      const wl=document.getElementById("workspaceLabel");if(wl)wl.innerHTML="<strong>Brand portal</strong><span>"+clientRoleConfig[profileReturnRole].brand+"</span>";
+    }
+  }
+
+  document.getElementById("profileButton")?.addEventListener("click",openProfile);
+  document.getElementById("profileBack")?.addEventListener("click",closeProfile);
+
+  document.getElementById("saveProfile")?.addEventListener("click",()=>{
+    const first=document.getElementById("profileFirstName")?.value.trim()||"";
+    const last=document.getElementById("profileLastName")?.value.trim()||"";
+    const username=document.getElementById("profileUsername")?.value.trim()||"";
+    if(!first||!last||!username){
+      showSystemToast("Profile needs attention","First name, last name, and username are required.");
+      return;
+    }
+    const tn=document.getElementById("topProfileName");if(tn)tn.textContent=first;
+    const initials=(first[0]||"")+(last[0]||"");
+    const tav=document.getElementById("topProfileAvatar");if(tav&&!tav.style.backgroundImage)tav.textContent=initials.toUpperCase();
+    const pav=document.getElementById("profileAvatarPreview");if(pav&&!pav.style.backgroundImage)pav.textContent=initials.toUpperCase();
+    showSystemToast("Profile saved","Your profile changes were recorded in this prototype.");
+  });
+
+  document.getElementById("profileAvatarInput")?.addEventListener("change",e=>{
+    const file=e.target.files?.[0];if(!file)return;
+    const reader=new FileReader();
+    reader.onload=()=>{
+      [document.getElementById("profileAvatarPreview"),document.getElementById("topProfileAvatar")].forEach(el=>{
+        if(!el)return;el.style.backgroundImage='url("'+reader.result+'")';el.textContent="";
+      });
+      showSystemToast("Avatar updated","Your new avatar is ready to save.");
+    };
+    reader.readAsDataURL(file);
+  });
+
+  document.getElementById("removeAvatar")?.addEventListener("click",()=>{
+    const p=profileRoleConfig[currentRole]||profileRoleConfig.admin;
+    [document.getElementById("profileAvatarPreview"),document.getElementById("topProfileAvatar")].forEach(el=>{
+      if(!el)return;el.style.backgroundImage="";el.textContent=p.initials;
+    });
+    const input=document.getElementById("profileAvatarInput");if(input)input.value="";
+    showSystemToast("Avatar removed","Initials will be used until another image is uploaded.");
+  });
+
+  document.getElementById("showPasswordChange")?.addEventListener("click",()=>{
+    document.getElementById("passwordChangePanel")?.classList.toggle("hidden");
+  });
+
+  document.getElementById("changePasswordAction")?.addEventListener("click",()=>{
+    const current=document.getElementById("currentPassword")?.value||"";
+    const next=document.getElementById("newPassword")?.value||"";
+    const confirm=document.getElementById("confirmPassword")?.value||"";
+    if(!current){showSystemToast("Current password required","Enter your current password before choosing a new one.");return}
+    if(next.length<12){showSystemToast("Password is too short","Use at least 12 characters.");return}
+    if(next!==confirm){showSystemToast("Passwords do not match","Re-enter the new password exactly.");return}
+    ["currentPassword","newPassword","confirmPassword"].forEach(id=>{const el=document.getElementById(id);if(el)el.value=""});
+    document.getElementById("passwordChangePanel")?.classList.add("hidden");
+    showSystemToast("Password updated","Prototype only. Production will send this through the authentication provider.");
+  });
+
+  function paletteFromUrl(url){
+    const host=(()=>{try{return new URL(url).hostname.toLowerCase()}catch{return ""}})();
+    if(host.includes("brut"))return{primary:"#151515",surface:"#F3EEE7",accent:"#A33A31",on:"#FFFFFF",name:"BRUT"};
+    if(host.includes("faux"))return{primary:"#242126",surface:"#F1ECE7",accent:"#6C5B54",on:"#FFFFFF",name:"FAUX"};
+    if(host.includes("thepull"))return{primary:"#143E33",surface:"#F5F7F4",accent:"#8BA99B",on:"#FFFFFF",name:"The Pull"};
+    let hash=0;for(const ch of host||"brand")hash=(hash*31+ch.charCodeAt(0))>>>0;
+    const hue=hash%360;return{primary:`hsl(${hue} 28% 20%)`,surface:`hsl(${hue} 18% 96%)`,accent:`hsl(${(hue+28)%360} 48% 42%)`,on:"#FFFFFF",name:host.split(".")[0]?.toUpperCase()||"BRAND"};
+  }
+
+  let proposedBrandTheme=paletteFromUrl("https://brut-clothing.us/");
+  function renderBrandThemePreview(theme){
+    proposedBrandTheme=theme;
+    const hero=document.getElementById("themeHero");if(hero){hero.style.background=theme.primary;hero.style.color=theme.on;hero.textContent=theme.name}
+    const map=[["themeSwatchPrimary","themePrimaryHex","primary"],["themeSwatchSurface","themeSurfaceHex","surface"],["themeSwatchAccent","themeAccentHex","accent"]];
+    map.forEach(([sw,tx,key])=>{const s=document.getElementById(sw),t=document.getElementById(tx);if(s)s.style.background=theme[key];if(t)t.textContent=theme[key]});
+  }
+
+  document.getElementById("previewBrandImport")?.addEventListener("click",()=>{
+    const url=document.getElementById("brandWebsiteUrl")?.value.trim()||"";
+    try{new URL(url)}catch{showSystemToast("Use a valid website URL","Include https:// and a complete domain.");return}
+    const theme=paletteFromUrl(url);
+    renderBrandThemePreview(theme);
+    const status=document.getElementById("brandImportStatus");if(status)status.textContent="Prototype preview ready. Production will extract verified tokens server-side and require approval before activation.";
+    showSystemToast("Brand preview ready","Review the proposed tokens before applying them.");
+  });
+
+  document.getElementById("applyBrandTheme")?.addEventListener("click",()=>{
+    if(!document.getElementById("brandThemeToggle")?.classList.contains("active")){showSystemToast("Brand theme is disabled","Turn on “Use approved brand theme” before applying.");return}
+    document.documentElement.style.setProperty("--brand-primary",proposedBrandTheme.primary);
+    document.documentElement.style.setProperty("--brand-accent",proposedBrandTheme.accent);
+    document.documentElement.style.setProperty("--brand-surface",proposedBrandTheme.surface);
+    document.documentElement.style.setProperty("--brand-on-primary",proposedBrandTheme.on);
+    document.body.classList.add("brand-theme-active");
+    showSystemToast("Brand theme applied","The dashboard is using the approved prototype token set.");
+  });
+
+  document.querySelectorAll(".toggle").forEach(toggle=>toggle.addEventListener("click",()=>{
+    toggle.classList.toggle("active");
+    toggle.setAttribute("aria-pressed",toggle.classList.contains("active")?"true":"false");
+  }));
+
   // Role-aware prototype controls
   let currentRole = "admin";
   let currentClientScreen = "home";
@@ -2927,6 +3092,7 @@ and never merge owned-media metrics with public-conversation metrics.</div></div
 
   function setRole(role){
     currentRole = role;
+    renderProfileForRole(role);
     const admin = role === "admin";
     document.getElementById("adminSidebarContent").classList.toggle("hidden", !admin);
     document.getElementById("clientSidebarContent").classList.toggle("hidden", admin);
