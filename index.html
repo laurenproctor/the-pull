@@ -1444,6 +1444,17 @@
     @media(max-width:1000px){.discovery-frame-head{flex-direction:column}.discovery-filter-grid,.advanced-filter-grid{grid-template-columns:1fr}.location-control{grid-template-columns:1fr}.geo-scope{width:max-content}}
     @media(max-width:680px){.discovery-frame-card{padding:22px}.discovery-frame-head{margin-bottom:24px}.discovery-frame-head .segmented{width:100%;overflow-x:auto;justify-content:flex-start}.discovery-frame-head .segmented button{white-space:nowrap}.freshness-control{width:100%}.freshness-control button{flex:1}.discovery-filter-footer{align-items:flex-start;flex-direction:column}.geo-scope{width:100%}.geo-scope button{flex:1}}
   
+  
+    /* Visible page URL */
+    .route-chip{display:flex;align-items:center;gap:8px;min-width:0;max-width:360px;border:1px solid var(--line);background:#fff;border-radius:12px;padding:6px 7px 6px 10px}
+    .route-chip-label{font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:#8a939b;font-weight:780;white-space:nowrap}
+    .route-chip-path{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10px;color:#4c565f;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+    .route-copy{border:0;background:#f1f3f2;color:#24312c;border-radius:8px;padding:7px 9px;font-size:10px;font-weight:750;white-space:nowrap}
+    .route-copy:hover{background:#e8ece9}
+    @media(max-width:1160px){.route-chip{max-width:220px}.route-chip-label{display:none}}
+    @media(max-width:900px){.route-chip{order:3;width:100%;max-width:none}.topbar-right{flex-wrap:wrap}.route-chip-path{flex:1}}
+    @media(max-width:620px){.route-chip{display:none}}
+  
   </style>
 </head>
 <body>
@@ -1505,7 +1516,7 @@
       </div>
       <div class="topbar-right">
         <label class="role-picker"><span>Preview as</span><select id="roleSelect" aria-label="Preview prototype as"><option value="admin">Partner Studio Admin — Lauren</option><option value="brut">BRUT — Brand Manager</option><option value="faux">FAUX — Brand Manager</option></select></label>
-        <div class="project-chip" id="contextChip"><span class="project-dot"></span><strong id="contextTitle">BRUT × FAUX</strong><span class="muted" id="contextMeta">Opportunity 03</span></div><button class="profile-chip" id="profileButton" type="button" aria-label="Open profile"><span class="profile-avatar" id="topProfileAvatar">LP</span><span class="profile-chip-copy"><strong id="topProfileName">Lauren</strong><span>Profile</span></span></button>
+        <div class="project-chip" id="contextChip"><span class="project-dot"></span><strong id="contextTitle">BRUT × FAUX</strong><span class="muted" id="contextMeta">Opportunity 03</span></div><div class="route-chip" title="Current shareable page URL"><span class="route-chip-label">Page URL</span><span class="route-chip-path" id="currentRoutePath">/app/discover</span><button class="route-copy" id="copyCurrentRoute" type="button">Copy link</button></div><button class="profile-chip" id="profileButton" type="button" aria-label="Open profile"><span class="profile-avatar" id="topProfileAvatar">LP</span><span class="profile-chip-copy"><strong id="topProfileName">Lauren</strong><span>Profile</span></span></button>
       </div>
     </div>
 
@@ -2736,11 +2747,28 @@ and never merge owned-media metrics with public-conversation metrics.</div></div
   const screens = ["brief","discover","assessment","compare","opportunity","tracker","observatory","reports"];
   let routeSyncSuppressed=false;
 
+  function syncVisibleRoute(){
+    const el=document.getElementById("currentRoutePath");
+    if(el)el.textContent=window.location.pathname+window.location.search;
+  }
+
   function writeAppRoute(path,title){
     if(routeSyncSuppressed) return;
-    if(window.location.pathname!==path) history.pushState({path},"",path);
+    const current=window.location.pathname+window.location.search;
+    if(current!==path) history.pushState({path},"",path);
     document.title=(title ? title+" · " : "")+"The Pull";
+    syncVisibleRoute();
   }
+
+  document.getElementById("copyCurrentRoute")?.addEventListener("click",async()=>{
+    const url=window.location.href;
+    try{
+      await navigator.clipboard.writeText(url);
+      showSystemToast("Link copied",window.location.pathname+window.location.search);
+    }catch{
+      showSystemToast("Copy unavailable",window.location.pathname+window.location.search);
+    }
+  });
 
   function routeForAdminScreen(name){
     const map={
@@ -3712,6 +3740,7 @@ and never merge owned-media metrics with public-conversation metrics.</div></div
     if(path==="/") history.replaceState({path:canonical},"",canonical);
     hydrateDiscoveryFiltersFromUrl();
     document.title=(canonical==="/profile"?"Profile":canonical.startsWith("/observatory/studies/")?(observatoryStudies[currentStudyId]?.title||"Study"):canonical==="/observatory"?"Observatory":canonical==="/reports"?"Reports":"The Pull")+" · The Pull";
+    syncVisibleRoute();
   }
 
   window.addEventListener("popstate",applyRouteFromLocation);
