@@ -3145,11 +3145,11 @@ and never merge owned-media metrics with public-conversation metrics.</div></div
     const geo=document.querySelector("[data-geo-scope].active")?.dataset.geoScope||"market";
     const evidence=document.getElementById("evidenceThreshold")?.value||"balanced";
     const scale=activeValues("scale")[0]||"any";
-    const history=document.getElementById("collaborationHistory")?.value||"any";
+    const collaborationHistoryValue=document.getElementById("collaborationHistory")?.value||"any";
     const exclusions=[...document.querySelectorAll("[data-exclusion].active")].map(b=>b.dataset.exclusion);
 
     const primaryCount=types.length+signals.length+(location?1:0)+1;
-    const advancedCount=formats.length+contributions.length+(evidence!=="balanced"?1:0)+(scale!=="any"?1:0)+(history!=="any"?1:0)+exclusions.length;
+    const advancedCount=formats.length+contributions.length+(evidence!=="balanced"?1:0)+(scale!=="any"?1:0)+(collaborationHistoryValue!=="any"?1:0)+exclusions.length;
     const freshnessLabel={ "30d":"30-day","90d":"90-day","12m":"12-month","any":"all-time" }[freshness]||freshness;
     const typeLabel=types.slice(0,2).map(v=>({
       hospitality:"Hospitality","arts-culture":"arts/culture","food-beverage":"food/beverage",fashion:"fashion","beauty-wellness":"beauty/wellness",media:"media","music-entertainment":"entertainment",sports:"sports",travel:"travel",retail:"retail",tech:"tech/AI",automotive:"automotive"
@@ -3175,7 +3175,7 @@ and never merge owned-media metrics with public-conversation metrics.</div></div
     const evidence=document.getElementById("evidenceThreshold")?.value||"balanced"; if(evidence!=="balanced")params.set("evidence",evidence);
     const scale=activeValues("scale")[0]||"any"; if(scale!=="any")params.set("scale",scale);
     const contributions=activeValues("contributions"); if(contributions.length)params.set("contributions",contributions.join(","));
-    const history=document.getElementById("collaborationHistory")?.value||"any"; if(history!=="any")params.set("history",history);
+    const collaborationHistoryValue=document.getElementById("collaborationHistory")?.value||"any"; if(collaborationHistoryValue!=="any")params.set("history",collaborationHistoryValue);
     const exclusions=[...document.querySelectorAll("[data-exclusion].active")].map(b=>b.dataset.exclusion); if(exclusions.length)params.set("exclude",exclusions.join(","));
     const qs=params.toString();
     history.replaceState({path:"/app/discover"},"","/app/discover"+(qs?"?"+qs:""));
@@ -3199,8 +3199,10 @@ and never merge owned-media metrics with public-conversation metrics.</div></div
       if(single){
         group.querySelectorAll(".filter-chip").forEach(b=>b.classList.remove("active"));
         btn.classList.add("active");
+        group.querySelectorAll(".filter-chip").forEach(b=>b.setAttribute("aria-pressed",b.classList.contains("active")?"true":"false"));
       }else{
         btn.classList.toggle("active");
+        btn.setAttribute("aria-pressed",btn.classList.contains("active")?"true":"false");
       }
       discoveryFiltersChanged();
     }));
