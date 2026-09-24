@@ -3044,6 +3044,63 @@ and never merge owned-media metrics with public-conversation metrics.</div></div
 
 <script>
   const screens = ["brief","discover","assessment","compare","opportunity","tracker","observatory","analytics","legal","creative","campaign"];
+
+  const mobileNavToggle=document.getElementById("mobileNavToggle");
+  const mobileNavClose=document.getElementById("mobileNavClose");
+  const mobileNavBackdrop=document.getElementById("mobileNavBackdrop");
+  const appSidebar=document.getElementById("appSidebar");
+  const mobileNavQuery=window.matchMedia("(max-width:1100px)");
+
+  function syncMobileNavA11y(){
+    if(!appSidebar) return;
+    const isMobile=mobileNavQuery.matches;
+    const isOpen=appSidebar.classList.contains("mobile-open");
+    appSidebar.inert=isMobile&&!isOpen;
+    appSidebar.setAttribute("aria-hidden",isMobile&&!isOpen?"true":"false");
+    mobileNavToggle?.setAttribute("aria-expanded",isOpen?"true":"false");
+    mobileNavBackdrop?.setAttribute("aria-hidden",isOpen?"false":"true");
+  }
+
+  function setMobileNavOpen(open,{restoreFocus=true}={}){
+    if(!appSidebar) return;
+    if(!mobileNavQuery.matches) open=false;
+    appSidebar.classList.toggle("mobile-open",open);
+    mobileNavBackdrop?.classList.toggle("open",open);
+    document.body.classList.toggle("mobile-nav-open",open);
+    syncMobileNavA11y();
+    if(open){
+      window.setTimeout(()=>mobileNavClose?.focus(),60);
+    }else if(restoreFocus && mobileNavQuery.matches){
+      mobileNavToggle?.focus();
+    }
+  }
+
+  mobileNavToggle?.addEventListener("click",()=>setMobileNavOpen(true));
+  mobileNavClose?.addEventListener("click",()=>setMobileNavOpen(false));
+  mobileNavBackdrop?.addEventListener("click",()=>setMobileNavOpen(false));
+
+  appSidebar?.querySelectorAll("[data-primary],[data-screen],[data-client-screen]").forEach(btn=>{
+    btn.addEventListener("click",()=>{
+      if(mobileNavQuery.matches) setMobileNavOpen(false,{restoreFocus:false});
+    });
+  });
+
+  document.addEventListener("keydown",e=>{
+    if(e.key==="Escape" && appSidebar?.classList.contains("mobile-open")){
+      setMobileNavOpen(false);
+    }
+  });
+
+  mobileNavQuery.addEventListener?.("change",()=>{
+    appSidebar?.classList.remove("mobile-open");
+    mobileNavBackdrop?.classList.remove("open");
+    document.body.classList.remove("mobile-nav-open");
+    syncMobileNavA11y();
+  });
+
+  syncMobileNavA11y();
+
+
   let routeSyncSuppressed=false;
 
   function syncVisibleRoute(){
