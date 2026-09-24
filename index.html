@@ -894,6 +894,44 @@
       .results-hero{padding:28px 22px}
     }
 
+  
+    /* Study detail cleanup: unblurred hero + single-line verification status */
+    #studyStatus{
+      white-space:nowrap;
+      flex:0 0 auto;
+      width:max-content;
+      align-self:flex-start;
+    }
+    .study-title-copy .row.start{
+      gap:18px;
+    }
+    .study-hero-art.real{
+      background-size:cover;
+      background-position:center;
+      isolation:isolate;
+    }
+    .study-hero-art.real::before,
+    .study-hero-art.real::after{
+      content:none!important;
+      display:none!important;
+    }
+    .study-hero-art.real .study-art-note{
+      left:18px;
+      right:auto;
+      top:18px;
+      bottom:auto;
+      max-width:calc(100% - 36px);
+      white-space:normal;
+      line-height:1.35;
+      background:rgba(0,0,0,.48);
+      border-color:rgba(255,255,255,.22);
+      backdrop-filter:none;
+    }
+    @media (max-width:680px){
+      #studyStatus{font-size:11px;padding:6px 8px}
+      .study-title-copy .row.start{align-items:flex-start}
+    }
+  
   </style>
 </head>
 <body>
@@ -2123,7 +2161,7 @@ Then canonicalize URL, publisher, date and syndication family.</div></div>
     const s = observatoryStudies[id]; if(!s) return; currentStudyId=id;
     const set=(sel,val)=>{const el=document.querySelector(sel);if(el)el.textContent=val};
     set('#studyLabel',s.label);set('#studyTitle',s.title);set('#studySubtitle',s.subtitle);set('#studyStatus',s.status);set('#scopeA',s.scopeA);set('#scopeB',s.scopeB);set('#studyWhyTitle',s.whyTitle);set('#studyWhyCopy',s.whyCopy);set('#coveragePct',s.coveragePct);set('#coverageLabel',s.coverageLabel);set('#coverageCopy',s.coverageCopy);set('#gallerySourcePill',s.gallerySource);set('#studyHeroNote',s.heroNote);
-    const hero=document.getElementById('studyHeroArt');if(hero){hero.style.backgroundImage=`url(${s.fallbackImage})`;hero.dataset.sourceUrl=s.heroImage||'';hero.classList.add('real')}
+    const hero=document.getElementById('studyHeroArt');if(hero){hero.style.backgroundImage=s.heroImage?`url(\"${s.heroImage}\"), url(\"${s.fallbackImage}\")`:`url(\"${s.fallbackImage}\")`;hero.dataset.sourceUrl=s.heroImage||'';hero.classList.add('real')}
     const kpis=document.getElementById('studyKpis');if(kpis)kpis.innerHTML=(s.kpis||[]).map(k=>`<div class="study-kpi"><span>${k.label}</span><strong>${k.value}</strong><small>${k.note}</small></div>`).join('');
     const gallery=document.getElementById('studyGallery');if(gallery)gallery.innerHTML=(s.gallery&&s.gallery.length)?s.gallery.map(g=>`<div class="study-image-card"><img src="${s.fallbackImage}" data-source-url="${g.img}" alt="${g.title}" loading="lazy"><div class="body"><span class="source-pill">Prototype photo · source linked</span><strong style="display:block;margin-top:8px">${g.title}</strong><p class="muted small" style="margin-top:8px">${g.copy}</p></div></div>`).join(''):`<div class="study-empty" style="grid-column:1/-1">No verified visual asset attached.</div>`;
     const social=document.getElementById('studySocial');if(social)social.innerHTML=(s.social&&s.social.length)?s.social.map(p=>`<div class="social-preview-card"><div class="social-preview-head"><div class="social-handle"><div class="social-badge">${p.badge}</div><div><strong>${p.handle}</strong><div class="muted small">${p.title}</div></div></div><span class="pill">Owned/context</span></div><div class="social-preview-thumb"><img src="${s.fallbackImage}" data-source-url="${p.img}" alt="${p.title}" loading="lazy"></div><div class="social-preview-body"><span class="source-pill">Prototype photo · source linked</span><p class="muted small" style="margin-top:8px">${p.copy}</p><div class="engagement-row">${(p.engagement||[]).map(e=>`<span class="engagement-pill">${e}</span>`).join('')}</div></div></div>`).join(''):`<div class="study-empty" style="grid-column:1/-1">No verified owned-media source attached.</div>`;
