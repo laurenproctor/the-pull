@@ -2486,6 +2486,33 @@ and never merge owned-media metrics with public-conversation metrics.</div></div
 
 <script>
   const screens = ["brief","discover","assessment","compare","opportunity","tracker","observatory","reports"];
+  let routeSyncSuppressed=false;
+
+  function writeAppRoute(path,title){
+    if(routeSyncSuppressed) return;
+    if(window.location.pathname!==path) history.pushState({path},"",path);
+    document.title=(title ? title+" · " : "")+"The Pull";
+  }
+
+  function routeForAdminScreen(name){
+    const map={
+      brief:"/app/opportunities/brut-faux/brief",
+      discover:"/app/discover",
+      assessment:"/app/opportunities/brut-faux/assessment",
+      compare:"/app/opportunities/brut-faux/compare",
+      opportunity:"/app/opportunities/brut-faux/opportunity-brief",
+      tracker:"/app/opportunities/brut-faux/pursuit",
+      observatory:"/observatory",
+      reports:"/reports"
+    };
+    return map[name]||"/app/discover";
+  }
+
+  function titleForAdminScreen(name){
+    const map={brief:"Collaboration Brief",discover:"Discover",assessment:"Assessment",compare:"Compare",opportunity:"Opportunity Brief",tracker:"Pursuit",observatory:"Observatory",reports:"Reports"};
+    return map[name]||"The Pull";
+  }
+
   const adminStageMeta = {
     brief:{label:"Stage 1 of 6 · Define",pct:17,next:"Next: begin discovery with a clear objective and measurement plan."},
     discover:{label:"Stage 2 of 6 · Discover",pct:33,next:"Next: assess the strongest candidate and resolve the open questions."},
@@ -2525,6 +2552,7 @@ and never merge owned-media metrics with public-conversation metrics.</div></div
     if(isObservatory){title.textContent="Collaboration Observatory"; meta.textContent="Market intelligence"; if(workspaceLabel) workspaceLabel.innerHTML="<strong>Observatory</strong><span>Market intelligence</span>";}
     else if(isReports){title.textContent="Reports"; meta.textContent="Briefs · outcomes · editorial"; if(workspaceLabel) workspaceLabel.innerHTML="<strong>Reports</strong><span>Reusable outputs</span>";}
     else {title.textContent="BRUT × FAUX"; meta.textContent="Opportunity 03"; if(workspaceLabel) workspaceLabel.innerHTML="<strong>Studio workspace</strong><span>BRUT × FAUX</span>"; updateAdminStage(name);}
+    writeAppRoute(routeForAdminScreen(name),titleForAdminScreen(name));
     window.scrollTo({top:0,behavior:"smooth"});
   }
 
@@ -2546,9 +2574,15 @@ and never merge owned-media metrics with public-conversation metrics.</div></div
   function setObservatoryView(view){
     document.querySelectorAll("[data-observatory-view]").forEach(btn => btn.classList.toggle("active", btn.dataset.observatoryView === view));
     document.querySelectorAll("[data-observatory-panel]").forEach(panel => panel.classList.toggle("hidden", panel.dataset.observatoryPanel !== view));
+    const path=view==="study"?"/observatory/studies/"+currentStudyId:(view==="editorial"?"/observatory/editorial":(view==="methodology"?"/observatory/methodology":"/observatory"));
+    const title=view==="study"?(observatoryStudies[currentStudyId]?.title||"Study"):view==="editorial"?"Observatory Editorial":view==="methodology"?"Observatory Methodology":"Observatory";
+    writeAppRoute(path,title);
   }
   function openObservatory(view="library"){
+    const prior=routeSyncSuppressed;
+    routeSyncSuppressed=true;
     go("observatory");
+    routeSyncSuppressed=prior;
     setObservatoryView(view);
   }
   document.querySelectorAll("[data-observatory-view]").forEach(btn => btn.addEventListener("click", () => setObservatoryView(btn.dataset.observatoryView)));
@@ -2940,6 +2974,7 @@ and never merge owned-media metrics with public-conversation metrics.</div></div
     const ct=document.getElementById("contextTitle");if(ct)ct.textContent="Profile";
     const cm=document.getElementById("contextMeta");if(cm)cm.textContent="Account settings";
     renderProfileForRole(currentRole);
+    writeAppRoute("/profile","Profile");
     window.scrollTo({top:0,behavior:"smooth"});
   }
 
@@ -3063,6 +3098,7 @@ and never merge owned-media metrics with public-conversation metrics.</div></div
     currentClientScreen = name;
     document.querySelectorAll("[data-client-panel]").forEach(panel => panel.classList.toggle("hidden", panel.dataset.clientPanel !== name));
     document.querySelectorAll("[data-client-screen]").forEach(btn => btn.classList.toggle("active", btn.dataset.clientScreen === name));
+    if(currentRole==="brut"||currentRole==="faux") writeAppRoute("/portal/"+currentRole+"/"+name,(clientRoleConfig[currentRole]?.brand||"Brand")+" · "+name.charAt(0).toUpperCase()+name.slice(1));
     window.scrollTo({top:0,behavior:"smooth"});
   }
 
@@ -3157,7 +3193,56 @@ and never merge owned-media metrics with public-conversation metrics.</div></div
     document.getElementById("clientHeroMedia").style.backgroundImage = sourceVisual.style.backgroundImage;
     document.querySelectorAll(".client-hero-clone").forEach(el => el.style.backgroundImage = sourceVisual.style.backgroundImage);
   }
-  setRole("admin");
+  function applyRouteFromLocation(){
+    const path=window.location.pathname.replace(/\/+$/,"")||"/";
+    routeSyncSuppressed=true;
+    try{
+      if(path==="/profile"){
+        setRole("admin");
+        openProfile();
+      }else{
+        const portal=path.match(/^\/portal\/(brut|faux)\/(home|collaboration|approvals|timeline|files|results)$/);
+        const study=path.match(/^\/observatory\/studies\/([a-z0-9-]+)$/);
+        if(portal){
+          setRole(portal[1]);
+          showClient(portal[2]);
+        }else if(study && observatoryStudies[study[1]]){
+          setRole("admin");
+          renderStudy(study[1]);
+          openObservatory("study");
+        }else if(path==="/observatory/editorial"){
+          setRole("admin");
+          openObservatory("editorial");
+        }else if(path==="/observatory/methodology"){
+          setRole("admin");
+          openObservatory("methodology");
+        }else if(path==="/observatory"){
+          setRole("admin");
+          openObservatory("library");
+        }else if(path==="/reports"){
+          setRole("admin");
+          go("reports");
+        }else{
+          const opportunity=path.match(/^\/app\/opportunities\/brut-faux\/(brief|assessment|compare|opportunity-brief|pursuit)$/);
+          setRole("admin");
+          if(opportunity){
+            const map={brief:"brief",assessment:"assessment",compare:"compare","opportunity-brief":"opportunity",pursuit:"tracker"};
+            go(map[opportunity[1]]);
+          }else{
+            go("discover");
+          }
+        }
+      }
+    }finally{
+      routeSyncSuppressed=false;
+    }
+    const canonical=path==="/"?"/app/discover":path;
+    if(path==="/") history.replaceState({path:canonical},"",canonical);
+    document.title=(canonical==="/profile"?"Profile":canonical.startsWith("/observatory/studies/")?(observatoryStudies[currentStudyId]?.title||"Study"):canonical==="/observatory"?"Observatory":canonical==="/reports"?"Reports":"The Pull")+" · The Pull";
+  }
+
+  window.addEventListener("popstate",applyRouteFromLocation);
+  applyRouteFromLocation();
 
 </script>
 </body>
