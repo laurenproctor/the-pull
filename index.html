@@ -2590,8 +2590,25 @@ Then canonicalize URL, publisher, date and syndication family.</div></div>
 
   document.querySelectorAll(".action-state").forEach(btn => btn.addEventListener("click", () => {
     const label = btn.textContent.trim();
-    if(label === "Save"){btn.textContent = "Saved"; btn.classList.remove("secondary"); btn.classList.add("quiet");}
-    else if(label === "Dismiss"){btn.textContent = "Dismissed"; btn.classList.remove("ghost"); btn.classList.add("quiet");}
+    if(label === "Save"){
+      btn.textContent = "Saved";
+      btn.classList.remove("secondary");
+      btn.classList.add("quiet");
+      showSystemToast("Saved to your shortlist","You can return to this opportunity from Saved.","Undo",()=>{
+        btn.textContent="Save";
+        btn.classList.add("secondary");
+        btn.classList.remove("quiet");
+      });
+    } else if(label === "Dismiss"){
+      btn.textContent = "Dismissed";
+      btn.classList.remove("ghost");
+      btn.classList.add("quiet");
+      showSystemToast("Opportunity dismissed","It will stay out of your active discovery set.","Undo",()=>{
+        btn.textContent="Dismiss";
+        btn.classList.add("ghost");
+        btn.classList.remove("quiet");
+      });
+    }
   }));
 
   document.querySelectorAll("[data-brief-mode]").forEach(btn => btn.addEventListener("click", () => {
@@ -2708,13 +2725,20 @@ Then canonicalize URL, publisher, date and syndication family.</div></div>
   document.querySelectorAll(".client-approval-action").forEach(btn => btn.addEventListener("click", () => {
     const card = btn.closest("[data-approval]");
     if(!card || card.classList.contains("approved")) return;
-    card.classList.add("approved");
     const actions = card.querySelector(".decision-actions");
+    const next = card.querySelector(".approval-next");
+    const previousActions = actions?.innerHTML || "";
+    const previousNext = next?.innerHTML || "";
+    card.classList.add("approved");
     if(actions) actions.innerHTML = '<span class="pill good">Decision recorded</span>';
-    const next=card.querySelector(".approval-next"); if(next) next.innerHTML='<strong>Moving forward</strong><span>Partner Studio has been cleared to continue this work.</span>';
+    if(next) next.innerHTML = '<strong>Moving forward</strong><span>Partner Studio has been cleared to continue this work.</span>';
     resetApprovalCount();
-    const toast=document.getElementById("successToast");
-    if(toast){toast.classList.remove("hidden"); clearTimeout(window.__partnerToast); window.__partnerToast=setTimeout(()=>toast.classList.add("hidden"),2200);}
+    showSystemToast("Decision recorded","Partner Studio can keep moving.","Undo",()=>{
+      card.classList.remove("approved");
+      if(actions) actions.innerHTML = previousActions;
+      if(next) next.innerHTML = previousNext;
+      resetApprovalCount();
+    });
   }));
 
   // Reuse the embedded opportunity visual so the role-aware HTML remains self-contained without duplicating a large image payload.
