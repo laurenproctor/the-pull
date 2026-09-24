@@ -3123,11 +3123,172 @@ and never merge owned-media metrics with public-conversation metrics.</div></div
     interesting:"Prioritizing less-obvious combinations that become compelling once the shared customer experience is made visible.",
     plausible:"Prioritizing opportunities with the clearest operating model, mutual incentive, and route to measurable value."
   };
+  function currentDiscoveryMode(){
+    return document.querySelector("[data-discovery-mode].active")?.dataset.discoveryMode || "closest";
+  }
+
+  function activeValues(group){
+    return [...document.querySelectorAll(`[data-filter-group="${group}"] .filter-chip.active`)].map(b=>b.dataset.filterValue);
+  }
+
+  function setSingleGroup(group,value){
+    document.querySelectorAll(`[data-filter-group="${group}"] .filter-chip`).forEach(b=>b.classList.toggle("active",b.dataset.filterValue===value));
+  }
+
+  function updateDiscoveryFilterSummary(){
+    const types=activeValues("types");
+    const signals=activeValues("signals");
+    const formats=activeValues("formats");
+    const contributions=activeValues("contributions");
+    const location=document.getElementById("discoveryLocation")?.value.trim()||"";
+    const freshness=document.querySelector("[data-freshness].active")?.dataset.freshness||"90d";
+    const geo=document.querySelector("[data-geo-scope].active")?.dataset.geoScope||"market";
+    const evidence=document.getElementById("evidenceThreshold")?.value||"balanced";
+    const scale=activeValues("scale")[0]||"any";
+    const history=document.getElementById("collaborationHistory")?.value||"any";
+    const exclusions=[...document.querySelectorAll("[data-exclusion].active")].map(b=>b.dataset.exclusion);
+
+    const primaryCount=types.length+signals.length+(location?1:0)+1;
+    const advancedCount=formats.length+contributions.length+(evidence!=="balanced"?1:0)+(scale!=="any"?1:0)+(history!=="any"?1:0)+exclusions.length;
+    const freshnessLabel={ "30d":"30-day","90d":"90-day","12m":"12-month","any":"all-time" }[freshness]||freshness;
+    const typeLabel=types.slice(0,2).map(v=>({
+      hospitality:"Hospitality","arts-culture":"arts/culture","food-beverage":"food/beverage",fashion:"fashion","beauty-wellness":"beauty/wellness",media:"media","music-entertainment":"entertainment",sports:"sports",travel:"travel",retail:"retail",tech:"tech/AI",automotive:"automotive"
+    }[v]||v)).join(" + ");
+
+    const summary=document.getElementById("discoveryFilterSummary");
+    if(summary)summary.innerHTML=`<strong>${primaryCount+advancedCount} active settings</strong> · ${typeLabel||"Any category"} · ${location||geo} · ${freshnessLabel} signals`;
+
+    const advanced=document.getElementById("advancedFilterSummary");
+    if(advanced)advanced.textContent=advancedCount ? `${advancedCount} advanced setting${advancedCount===1?"":"s"} applied` : "No advanced filters applied";
+  }
+
+  function writeDiscoveryFiltersToUrl(){
+    if(window.location.pathname!=="/app/discover" || routeSyncSuppressed) return;
+    const params=new URLSearchParams();
+    const mode=currentDiscoveryMode(); if(mode!=="closest")params.set("mode",mode);
+    const types=activeValues("types"); if(types.length)params.set("types",types.join(","));
+    const location=document.getElementById("discoveryLocation")?.value.trim()||""; if(location)params.set("location",location);
+    const geo=document.querySelector("[data-geo-scope].active")?.dataset.geoScope||"market"; if(geo!=="market")params.set("geo",geo);
+    const signals=activeValues("signals"); if(signals.length)params.set("signals",signals.join(","));
+    const freshness=document.querySelector("[data-freshness].active")?.dataset.freshness||"90d"; if(freshness!=="90d")params.set("freshness",freshness);
+    const formats=activeValues("formats"); if(formats.length)params.set("formats",formats.join(","));
+    const evidence=document.getElementById("evidenceThreshold")?.value||"balanced"; if(evidence!=="balanced")params.set("evidence",evidence);
+    const scale=activeValues("scale")[0]||"any"; if(scale!=="any")params.set("scale",scale);
+    const contributions=activeValues("contributions"); if(contributions.length)params.set("contributions",contributions.join(","));
+    const history=document.getElementById("collaborationHistory")?.value||"any"; if(history!=="any")params.set("history",history);
+    const exclusions=[...document.querySelectorAll("[data-exclusion].active")].map(b=>b.dataset.exclusion); if(exclusions.length)params.set("exclude",exclusions.join(","));
+    const qs=params.toString();
+    history.replaceState({path:"/app/discover"},"","/app/discover"+(qs?"?"+qs:""));
+  }
+
+  function discoveryFiltersChanged(){
+    updateDiscoveryFilterSummary();
+    writeDiscoveryFiltersToUrl();
+  }
+
   document.querySelectorAll("[data-discovery-mode]").forEach(btn => btn.addEventListener("click", () => {
     document.querySelectorAll("[data-discovery-mode]").forEach(x => x.classList.remove("active"));
     btn.classList.add("active");
     document.getElementById("discoveryModeCopy").textContent = discoveryCopy[btn.dataset.discoveryMode];
+    discoveryFiltersChanged();
   }));
+
+  document.querySelectorAll("[data-filter-group]").forEach(group=>{
+    const single=group.classList.contains("single-select-filter");
+    group.querySelectorAll(".filter-chip").forEach(btn=>btn.addEventListener("click",()=>{
+      if(single){
+        group.querySelectorAll(".filter-chip").forEach(b=>b.classList.remove("active"));
+        btn.classList.add("active");
+      }else{
+        btn.classList.toggle("active");
+      }
+      discoveryFiltersChanged();
+    }));
+  });
+
+  document.querySelectorAll("[data-geo-scope]").forEach(btn=>btn.addEventListener("click",()=>{
+    document.querySelectorAll("[data-geo-scope]").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    const input=document.getElementById("discoveryLocation");
+    if(btn.dataset.geoScope==="anywhere" && input) input.value="";
+    discoveryFiltersChanged();
+  }));
+
+  document.querySelectorAll("[data-freshness]").forEach(btn=>btn.addEventListener("click",()=>{
+    document.querySelectorAll("[data-freshness]").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    discoveryFiltersChanged();
+  }));
+
+  document.querySelectorAll("[data-exclusion]").forEach(btn=>btn.addEventListener("click",()=>{
+    btn.classList.toggle("active");
+    btn.setAttribute("aria-pressed",btn.classList.contains("active")?"true":"false");
+    discoveryFiltersChanged();
+  }));
+
+  ["discoveryLocation","evidenceThreshold","collaborationHistory"].forEach(id=>{
+    const el=document.getElementById(id);
+    el?.addEventListener("change",discoveryFiltersChanged);
+    if(id==="discoveryLocation")el?.addEventListener("input",()=>{
+      clearTimeout(window.__discoveryLocationTimer);
+      window.__discoveryLocationTimer=setTimeout(discoveryFiltersChanged,350);
+    });
+  });
+
+  function hydrateDiscoveryFiltersFromUrl(){
+    if(window.location.pathname!=="/app/discover") return;
+    const p=new URLSearchParams(window.location.search);
+    const mode=p.get("mode")||"closest";
+    const modeBtn=document.querySelector(`[data-discovery-mode="${mode}"]`);
+    if(modeBtn){
+      document.querySelectorAll("[data-discovery-mode]").forEach(b=>b.classList.toggle("active",b===modeBtn));
+      const copy=document.getElementById("discoveryModeCopy");if(copy)copy.textContent=discoveryCopy[mode];
+    }
+
+    const hydrateMulti=(group,param,defaults=[])=>{
+      const raw=p.get(param);
+      const wanted=raw?raw.split(",").filter(Boolean):defaults;
+      document.querySelectorAll(`[data-filter-group="${group}"] .filter-chip`).forEach(b=>b.classList.toggle("active",wanted.includes(b.dataset.filterValue)));
+    };
+    hydrateMulti("types","types",["hospitality","arts-culture"]);
+    hydrateMulti("signals","signals",["design","audience"]);
+    hydrateMulti("formats","formats",[]);
+    hydrateMulti("contributions","contributions",[]);
+
+    const loc=document.getElementById("discoveryLocation");if(loc)loc.value=p.get("location")??"Downtown Manhattan";
+    const geo=p.get("geo")||"market";document.querySelectorAll("[data-geo-scope]").forEach(b=>b.classList.toggle("active",b.dataset.geoScope===geo));
+    const fresh=p.get("freshness")||"90d";document.querySelectorAll("[data-freshness]").forEach(b=>b.classList.toggle("active",b.dataset.freshness===fresh));
+    const evidence=document.getElementById("evidenceThreshold");if(evidence)evidence.value=p.get("evidence")||"balanced";
+    setSingleGroup("scale",p.get("scale")||"any");
+    const hist=document.getElementById("collaborationHistory");if(hist)hist.value=p.get("history")||"any";
+
+    const exclude=(p.get("exclude")||"competitors,dismissed").split(",").filter(Boolean);
+    document.querySelectorAll("[data-exclusion]").forEach(b=>{
+      const on=exclude.includes(b.dataset.exclusion);
+      b.classList.toggle("active",on);b.setAttribute("aria-pressed",on?"true":"false");
+    });
+    updateDiscoveryFilterSummary();
+  }
+
+  document.getElementById("resetDiscoveryFilters")?.addEventListener("click",()=>{
+    document.querySelectorAll("[data-discovery-mode]").forEach(b=>b.classList.toggle("active",b.dataset.discoveryMode==="closest"));
+    document.getElementById("discoveryModeCopy").textContent=discoveryCopy.closest;
+    document.querySelectorAll('[data-filter-group="types"] .filter-chip').forEach(b=>b.classList.toggle("active",["hospitality","arts-culture"].includes(b.dataset.filterValue)));
+    document.querySelectorAll('[data-filter-group="signals"] .filter-chip').forEach(b=>b.classList.toggle("active",["design","audience"].includes(b.dataset.filterValue)));
+    document.querySelectorAll('[data-filter-group="formats"] .filter-chip,[data-filter-group="contributions"] .filter-chip').forEach(b=>b.classList.remove("active"));
+    setSingleGroup("scale","any");
+    const loc=document.getElementById("discoveryLocation");if(loc)loc.value="Downtown Manhattan";
+    document.querySelectorAll("[data-geo-scope]").forEach(b=>b.classList.toggle("active",b.dataset.geoScope==="market"));
+    document.querySelectorAll("[data-freshness]").forEach(b=>b.classList.toggle("active",b.dataset.freshness==="90d"));
+    const ev=document.getElementById("evidenceThreshold");if(ev)ev.value="balanced";
+    const hist=document.getElementById("collaborationHistory");if(hist)hist.value="any";
+    document.querySelectorAll("[data-exclusion]").forEach(b=>{
+      const on=["competitors","dismissed"].includes(b.dataset.exclusion);
+      b.classList.toggle("active",on);b.setAttribute("aria-pressed",on?"true":"false");
+    });
+    discoveryFiltersChanged();
+    showSystemToast("Discovery settings reset","The default opportunity frame is restored.");
+  });
 
   document.querySelectorAll(".action-state").forEach(btn => btn.addEventListener("click", () => {
     const label = btn.textContent.trim();
@@ -3547,6 +3708,7 @@ and never merge owned-media metrics with public-conversation metrics.</div></div
     }
     const canonical=path==="/"?"/app/discover":path;
     if(path==="/") history.replaceState({path:canonical},"",canonical);
+    hydrateDiscoveryFiltersFromUrl();
     document.title=(canonical==="/profile"?"Profile":canonical.startsWith("/observatory/studies/")?(observatoryStudies[currentStudyId]?.title||"Study"):canonical==="/observatory"?"Observatory":canonical==="/reports"?"Reports":"The Pull")+" · The Pull";
   }
 
