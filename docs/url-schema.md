@@ -16,6 +16,20 @@ The static Netlify prototype now uses clean History API routes with an SPA rewri
 
 Production should replace `brut-faux` with the immutable opportunity slug or ID-backed slug.
 
+## Studio operating workspaces
+
+| Route | Purpose |
+|---|---|
+| `/analytics` | Analytics & reporting overview |
+| `/analytics/channels` | Channel performance |
+| `/analytics/data-quality` | Attribution + data quality |
+| `/analytics/reports` | Report library / generation |
+| `/legal` | Legal & contracts |
+| `/creative` | Creative production |
+| `/campaign` | Campaign planning |
+
+`/reports` remains a compatibility alias for `/analytics/reports` in the prototype.
+
 ## Observatory
 
 | Route | Purpose |
