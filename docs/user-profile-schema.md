@@ -116,6 +116,9 @@ Studio-private access should be a separate permission and should never be grante
 - approval_notifications: boolean
 - deadline_notifications: boolean
 - weekly_summary: boolean
+- product_newsletter_subscribed: boolean
+- product_newsletter_opted_in_at: nullable timestamp
+- product_newsletter_opt_in_source: nullable string
 - marketing_updates: boolean
 - notification_email_override: nullable
 - default_workspace_id: nullable
@@ -275,6 +278,8 @@ Read-only for ordinary brand managers unless they have organization-admin rights
 - approvals
 - deadlines
 - weekly digest
+- product newsletter: product updates, industry updates, and the art and science of brand collaborations
+- explicit newsletter consent timestamp/source
 - optional marketing/product updates
 - theme preference / reduced motion
 
@@ -307,3 +312,36 @@ Before activation:
 - do not reduce minimum touch targets
 - preserve reduced-motion preference
 - allow immediate revert to default The Pull theme
+
+
+## Autosave behavior
+
+Profile editing should use debounced autosave for low-risk profile and preference fields.
+
+Recommended states:
+- All changes saved
+- Saving…
+- Save failed — retry
+
+Recommended debounce: 500–1000 ms after the last edit.
+
+Autosave:
+- names
+- username after availability validation
+- job title
+- timezone / locale
+- notification preferences
+- newsletter preference
+- brand website URL
+- personal theme preference
+
+Do not autosave:
+- current password
+- new password
+- MFA enrollment secrets
+- recovery codes
+- destructive account actions
+
+Password/MFA/session actions require explicit submission and reauthentication where appropriate.
+
+The production API should use optimistic concurrency/versioning or updated_at checks so one browser tab does not silently overwrite newer profile changes from another session.
