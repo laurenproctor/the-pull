@@ -1330,6 +1330,14 @@
     body.brand-theme-active .profile-avatar,
     body.brand-theme-active .avatar-large{background-color:var(--brand-primary)}
   
+  
+    /* Profile autosave status */
+    .profile-save-state{display:inline-flex;align-items:center;gap:8px;padding:9px 12px;border:1px solid var(--line);border-radius:999px;background:#fff;color:var(--muted);font-size:11px;font-weight:650;white-space:nowrap}
+    .profile-save-dot{width:7px;height:7px;border-radius:50%;background:#2f7a55;transition:.18s}
+    .profile-save-state.saving .profile-save-dot{background:#b07818;animation:savePulse .8s ease-in-out infinite alternate}
+    .profile-save-state.error .profile-save-dot{background:#a52a22}
+    @keyframes savePulse{from{opacity:.45}to{opacity:1}}
+  
   </style>
 </head>
 <body>
@@ -1406,7 +1414,7 @@
               <h1>Your profile</h1>
               <p class="lede">Manage your identity, security, brand membership, and how your organization’s visual system appears in The Pull.</p>
             </div>
-            <button class="button" id="saveProfile" type="button">Save profile</button>
+            <div class="profile-save-state" id="profileSaveState" role="status" aria-live="polite"><span class="profile-save-dot"></span><span id="profileSaveText">All changes saved</span></div>
           </div>
 
           <div class="profile-layout">
@@ -1493,9 +1501,9 @@
 
               <section class="profile-section">
                 <div class="section-label">Preferences</div>
-                <div class="preference-row"><div><strong>Approval notifications</strong><p>Email me when a decision needs my input.</p></div><button class="toggle active" type="button" aria-pressed="true"></button></div>
-                <div class="preference-row"><div><strong>Deadline reminders</strong><p>Notify me before collaboration milestones I own.</p></div><button class="toggle active" type="button" aria-pressed="true"></button></div>
-                <div class="preference-row"><div><strong>Weekly summary</strong><p>One concise digest of changes, decisions, and results.</p></div><button class="toggle" type="button" aria-pressed="false"></button></div>
+                <div class="preference-row"><div><strong>Approval notifications</strong><p>Email me when a decision needs my input.</p></div><button class="toggle active" data-preference="approval_notifications" type="button" aria-pressed="true" aria-label="Approval notifications"></button></div>
+                <div class="preference-row"><div><strong>Deadline reminders</strong><p>Notify me before collaboration milestones I own.</p></div><button class="toggle active" data-preference="deadline_notifications" type="button" aria-pressed="true" aria-label="Deadline reminders"></button></div>
+                <div class="preference-row"><div><strong>Weekly summary</strong><p>One concise digest of changes, decisions, and results.</p></div><button class="toggle" data-preference="weekly_summary" type="button" aria-pressed="false" aria-label="Weekly summary"></button></div><div class="preference-row"><div><strong>Product newsletter</strong><p>Product updates, industry updates, and the art and science of brand collaborations.</p></div><button class="toggle" data-preference="product_newsletter" type="button" aria-pressed="false" aria-label="Product newsletter"></button></div>
               </section>
 
               <section class="profile-section">
@@ -2949,6 +2957,19 @@ and never merge owned-media metrics with public-conversation metrics.</div></div
 
   function renderProfileForRole(role){
     const p=profileRoleConfig[role]||profileRoleConfig.admin;
+    try{
+      const saved=JSON.parse(localStorage.getItem("thepull.profile."+role)||"null");
+      if(saved){
+        p.first=saved.first_name||p.first;p.last=saved.last_name||p.last;p.username=saved.username||p.username;p.email=saved.email||p.email;p.title=saved.job_title||p.title;p.site=saved.brand_website_url??p.site;
+        document.querySelectorAll("#profileScreen [data-preference]").forEach(t=>{
+          if(saved.preferences && Object.prototype.hasOwnProperty.call(saved.preferences,t.dataset.preference)){
+            const on=!!saved.preferences[t.dataset.preference];t.classList.toggle("active",on);t.setAttribute("aria-pressed",on?"true":"false");
+          }
+        });
+        const themeToggle=document.getElementById("brandThemeToggle");
+        if(themeToggle && typeof saved.use_organization_theme==="boolean"){themeToggle.classList.toggle("active",saved.use_organization_theme);themeToggle.setAttribute("aria-pressed",saved.use_organization_theme?"true":"false")}
+      }
+    }catch{}
     const values={
       profileFirstName:p.first,profileLastName:p.last,profileUsername:p.username,
       profileEmail:p.email,profileTitle:p.title,brandWebsiteUrl:p.site
@@ -2993,20 +3014,67 @@ and never merge owned-media metrics with public-conversation metrics.</div></div
   document.getElementById("profileButton")?.addEventListener("click",openProfile);
   document.getElementById("profileBack")?.addEventListener("click",closeProfile);
 
-  document.getElementById("saveProfile")?.addEventListener("click",()=>{
-    const first=document.getElementById("profileFirstName")?.value.trim()||"";
-    const last=document.getElementById("profileLastName")?.value.trim()||"";
-    const username=document.getElementById("profileUsername")?.value.trim()||"";
-    if(!first||!last||!username){
-      showSystemToast("Profile needs attention","First name, last name, and username are required.");
+  let profileSaveTimer=null;
+
+  function profileStorageKey(){return "thepull.profile."+currentRole}
+
+  function setProfileSaveState(state,text){
+    const el=document.getElementById("profileSaveState"),label=document.getElementById("profileSaveText");
+    if(!el||!label)return;
+    el.classList.toggle("saving",state==="saving");
+    el.classList.toggle("error",state==="error");
+    label.textContent=text;
+  }
+
+  function collectProfileState(){
+    const get=id=>document.getElementById(id)?.value??"";
+    const preferences={};
+    document.querySelectorAll("#profileScreen [data-preference]").forEach(t=>preferences[t.dataset.preference]=t.classList.contains("active"));
+    return{
+      first_name:get("profileFirstName").trim(),
+      last_name:get("profileLastName").trim(),
+      username:get("profileUsername").trim(),
+      email:get("profileEmail").trim(),
+      job_title:get("profileTitle").trim(),
+      timezone:get("profileTimezone"),
+      brand_website_url:get("brandWebsiteUrl").trim(),
+      use_organization_theme:document.getElementById("brandThemeToggle")?.classList.contains("active")||false,
+      preferences,
+      updated_at:new Date().toISOString()
+    };
+  }
+
+  function persistProfileNow(){
+    const state=collectProfileState();
+    if(!state.first_name||!state.last_name||!state.username){
+      setProfileSaveState("error","Required profile fields are missing");
       return;
     }
-    const tn=document.getElementById("topProfileName");if(tn)tn.textContent=first;
-    const initials=(first[0]||"")+(last[0]||"");
-    const tav=document.getElementById("topProfileAvatar");if(tav&&!tav.style.backgroundImage)tav.textContent=initials.toUpperCase();
-    const pav=document.getElementById("profileAvatarPreview");if(pav&&!pav.style.backgroundImage)pav.textContent=initials.toUpperCase();
-    showSystemToast("Profile saved","Your profile changes were recorded in this prototype.");
+    try{
+      localStorage.setItem(profileStorageKey(),JSON.stringify(state));
+      const p=profileRoleConfig[currentRole]||profileRoleConfig.admin;
+      p.first=state.first_name;p.last=state.last_name;p.username=state.username;p.email=state.email;p.title=state.job_title;p.site=state.brand_website_url;
+      const tn=document.getElementById("topProfileName");if(tn)tn.textContent=state.first_name;
+      const initials=((state.first_name[0]||"")+(state.last_name[0]||"")).toUpperCase();
+      const tav=document.getElementById("topProfileAvatar");if(tav&&!tav.style.backgroundImage)tav.textContent=initials;
+      const pav=document.getElementById("profileAvatarPreview");if(pav&&!pav.style.backgroundImage)pav.textContent=initials;
+      setProfileSaveState("saved","Saved just now");
+    }catch{
+      setProfileSaveState("error","Could not save changes");
+    }
+  }
+
+  function scheduleProfileAutosave(){
+    setProfileSaveState("saving","Saving…");
+    clearTimeout(profileSaveTimer);
+    profileSaveTimer=setTimeout(persistProfileNow,650);
+  }
+
+  document.querySelectorAll("#profileScreen input:not([type=password]):not([type=file]), #profileScreen select").forEach(el=>{
+    el.addEventListener("input",scheduleProfileAutosave);
+    el.addEventListener("change",scheduleProfileAutosave);
   });
+
 
   document.getElementById("profileAvatarInput")?.addEventListener("change",e=>{
     const file=e.target.files?.[0];if(!file)return;
@@ -3084,6 +3152,7 @@ and never merge owned-media metrics with public-conversation metrics.</div></div
   document.querySelectorAll(".toggle").forEach(toggle=>toggle.addEventListener("click",()=>{
     toggle.classList.toggle("active");
     toggle.setAttribute("aria-pressed",toggle.classList.contains("active")?"true":"false");
+    if(toggle.closest("#profileScreen")) scheduleProfileAutosave();
   }));
 
   // Role-aware prototype controls
