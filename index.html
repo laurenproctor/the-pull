@@ -1246,6 +1246,21 @@
     .side-nav button,.project-nav button,.client-side-nav button,.screen-tabs button,.obs-tabs button,.study-scope button,.window-tabs button,.segmented button,.choice{min-height:40px}
     @media(max-width:680px){.button,.side-nav button,.project-nav button,.client-side-nav button,.screen-tabs button,.obs-tabs button,.study-scope button,.window-tabs button,.segmented button,.choice,.role-picker select,.icon-close{min-height:44px}.system-toast{bottom:16px;align-items:flex-start}details.page-help .context-strip{grid-template-columns:1fr}}
 
+  
+    /* Pair discovery channel coverage */
+    .channel-matrix{display:grid;grid-template-columns:minmax(150px,.8fr) 1.25fr 1.25fr;gap:0;border:1px solid var(--line);border-radius:18px;overflow:hidden;background:#fff}
+    .channel-matrix-head,.channel-row{display:contents}
+    .channel-cell{padding:15px 17px;border-top:1px solid var(--line);min-width:0;font-size:12px;line-height:1.5}
+    .channel-matrix-head .channel-cell{border-top:0;background:#f5f7f5;font-size:10px;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);font-weight:760}
+    .channel-cell + .channel-cell{border-left:1px solid var(--line)}
+    .channel-name{font-weight:750;font-size:13px;color:var(--ink)}
+    .channel-cell p{margin:4px 0 0;color:var(--muted)}
+    .channel-mode{display:flex;gap:7px;align-items:flex-start}
+    .channel-check{width:17px;height:17px;border-radius:5px;background:#e9f3ed;border:1px solid #b8d0c1;color:#1d6741;display:grid;place-items:center;font-size:10px;font-weight:900;flex:0 0 auto;margin-top:1px}
+    .channel-caveat{margin-top:14px;padding:14px 16px;border-radius:14px;background:#fffaf0;border:1px solid #ead9ad;font-size:12px;line-height:1.55;color:#65562e}
+    .query-code{white-space:pre-wrap;overflow-x:auto}
+    @media(max-width:760px){.channel-matrix{display:block;border:0;background:transparent}.channel-matrix-head{display:none}.channel-row{display:grid;grid-template-columns:1fr;gap:0;margin-bottom:14px;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:#fff}.channel-cell{border-top:1px solid var(--line)!important;border-left:0!important;padding:16px}.channel-row .channel-cell:first-child{border-top:0!important;background:#f8faf8}.channel-name{font-size:14px}}
+
   </style>
 </head>
 <body>
@@ -2095,28 +2110,86 @@
             <div class="method-card full"><div class="section-label">The recurring workflow</div><h2>Find → verify → capture → normalize → review → freeze → refresh</h2><div class="method-steps"><div class="method-step"><b>1 · Identify</b><span>Resolve canonical brands, aliases, domains, handles, market and likely launch window.</span></div><div class="method-step"><b>2 · Confirm</b><span>Require an official source or multiple reliable independent sources that the collaboration actually exists.</span></div><div class="method-step"><b>3 · Capture</b><span>Store official pages, owned posts, campaign assets, press URLs, timestamps and metric snapshots.</span></div><div class="method-step"><b>4 · Normalize</b><span>Separate partnership facts from Brand A, Brand B, platform, market and measurement window.</span></div><div class="method-step"><b>5 · Review</b><span>Human reviewer accepts/rejects sources, deduplicates syndication, and labels uncertainty.</span></div><div class="method-step"><b>6 · Freeze</b><span>Published reports reference immutable source/observation IDs and capture times.</span></div><div class="method-step"><b>7 · Refresh</b><span>Re-run due collectors without silently rewriting previously published numbers.</span></div><div class="method-step"><b>8 · Learn</b><span>Feed verified patterns back into partner discovery without converting correlation into causal prediction.</span></div></div></div>
             <div class="method-card"><div class="section-label">Source hierarchy</div><h2>Prefer the source closest to the fact.</h2><div class="truth-rule"><div class="num">A</div><div><strong>Official / first-party</strong><span>Brand site, product page, official newsroom, canonical social post, authorized analytics.</span></div></div><div class="truth-rule"><div class="num">B</div><div><strong>Original reporting / authoritative trade</strong><span>Named publication with original reporting, interviews, launch details or campaign analysis.</span></div></div><div class="truth-rule"><div class="num">C</div><div><strong>Provider / social mirror snapshot</strong><span>Useful for discovery or time-stamped social metrics, but never allowed to silently override a Tier A source.</span></div></div><div class="truth-rule"><div class="num">D</div><div><strong>Supplemental</strong><span>Retailer, community, reseller or secondary summary. Discovery only unless independently verified.</span></div></div></div>
             <div class="method-card"><div class="section-label">Claim rules</div><h2>What the UI is allowed to say</h2><div class="truth-rule"><div class="num">1</div><div><strong>No source, no claim.</strong><span>Unknown stays null. A failed collector never becomes zero.</span></div></div><div class="truth-rule"><div class="num">2</div><div><strong>Snapshot metrics need time.</strong><span>Likes, comments, followers and views always carry observed_at/captured_at.</span></div></div><div class="truth-rule"><div class="num">3</div><div><strong>Brand-wide change is contextual.</strong><span>Do not attribute audience or search change exclusively to a collaboration without a study design that supports it.</span></div></div><div class="truth-rule"><div class="num">4</div><div><strong>Syndication is not extra press.</strong><span>Canonicalize and deduplicate copies of the same underlying article.</span></div></div><div class="truth-rule"><div class="num">5</div><div><strong>Visual rights are separate from factual evidence.</strong><span>Store source/credit/rights status; link or render remotely when republication rights are unclear.</span></div></div></div>
-            <div class="method-card full"><div class="section-label">Query recipes</div><h2>How to find the same evidence again</h2><div class="query-code">PAIR DISCOVERY
+            <div class="method-card full"><div class="section-label">Pair discovery settings</div><h2>Search each channel twice: owned voice and public conversation.</h2><p class="muted small" style="line-height:1.65;margin-bottom:18px">Every enabled channel has two independent collection lanes. <strong>Owned / official</strong> captures what either brand published itself. <strong>Conversation / earned</strong> captures posts, threads, replies, groups, communities, newsletters, pins, and commentary about the collaboration. Never mix the two into one denominator.</p>
+<div class="channel-matrix">
+  <div class="channel-matrix-head"><div class="channel-cell">Channel</div><div class="channel-cell">Owned / official</div><div class="channel-cell">Conversation / earned</div></div>
+  <div class="channel-row"><div class="channel-cell"><div class="channel-name">Instagram</div></div><div class="channel-cell"><div class="channel-mode"><span class="channel-check">✓</span><div>Brand posts, Reels, Stories where capturable, collaboration tags, canonical post IDs.</div></div></div><div class="channel-cell"><div class="channel-mode"><span class="channel-check">✓</span><div>Public posts, Reels, comments, mentions, hashtags, creator/community discussion.</div></div></div></div>
+  <div class="channel-row"><div class="channel-cell"><div class="channel-name">YouTube</div></div><div class="channel-cell"><div class="channel-mode"><span class="channel-check">✓</span><div>Official videos, Shorts, descriptions, playlists, launch films and view snapshots.</div></div></div><div class="channel-cell"><div class="channel-mode"><span class="channel-check">✓</span><div>Reviews, reactions, commentary videos, Shorts, comments and relevant creator coverage.</div></div></div></div>
+  <div class="channel-row"><div class="channel-cell"><div class="channel-name">X</div></div><div class="channel-cell"><div class="channel-mode"><span class="channel-check">✓</span><div>Posts, threads, replies and media from verified/canonical brand accounts.</div></div></div><div class="channel-cell"><div class="channel-mode"><span class="channel-check">✓</span><div>Mentions, quote-posts, replies, threads, hashtags and public reaction.</div></div></div></div>
+  <div class="channel-row"><div class="channel-cell"><div class="channel-name">TikTok</div></div><div class="channel-cell"><div class="channel-mode"><span class="channel-check">✓</span><div>Official brand videos, captions, sounds, launch posts and observable engagement snapshots.</div></div></div><div class="channel-cell"><div class="channel-mode"><span class="channel-check">✓</span><div>UGC, stitches, duets, reviews, mentions, hashtag/sound participation and comments.</div></div></div></div>
+  <div class="channel-row"><div class="channel-cell"><div class="channel-name">LinkedIn</div></div><div class="channel-cell"><div class="channel-mode"><span class="channel-check">✓</span><div>Company-page posts, executive/employee launch posts explicitly representing the brand, articles and newsletters.</div></div></div><div class="channel-cell"><div class="channel-mode"><span class="channel-check">✓</span><div>Member posts, industry discussion, comments, agency/vendor commentary and trade reaction.</div></div></div></div>
+  <div class="channel-row"><div class="channel-cell"><div class="channel-name">Facebook</div><p>Pages + groups</p></div><div class="channel-cell"><div class="channel-mode"><span class="channel-check">✓</span><div>Official Pages, brand posts, launch videos, events and public brand-run Groups.</div></div></div><div class="channel-cell"><div class="channel-mode"><span class="channel-check">✓</span><div>Public Pages, public Groups, posts, shares, comments and community discussion. Private Groups remain unavailable unless permissioned.</div></div></div></div>
+  <div class="channel-row"><div class="channel-cell"><div class="channel-name">Reddit</div></div><div class="channel-cell"><div class="channel-mode"><span class="channel-check">✓</span><div>Official brand accounts, verified AMAs/posts, and brand-run communities when clearly identified.</div></div></div><div class="channel-cell"><div class="channel-mode"><span class="channel-check">✓</span><div>Posts and comments across relevant subreddits, including product, fashion, hospitality and local-market discussion.</div></div></div></div>
+  <div class="channel-row"><div class="channel-cell"><div class="channel-name">Pinterest</div></div><div class="channel-cell"><div class="channel-mode"><span class="channel-check">✓</span><div>Official profile Pins, boards, campaign/product Pins and linked landing pages.</div></div></div><div class="channel-cell"><div class="channel-mode"><span class="channel-check">✓</span><div>Public Pins and boards referencing the collaboration, saves/repins where available, and visual trend context.</div></div></div></div>
+  <div class="channel-row"><div class="channel-cell"><div class="channel-name">Substack</div></div><div class="channel-cell"><div class="channel-mode"><span class="channel-check">✓</span><div>Brand-owned newsletters/publications, official partner essays and launch notes.</div></div></div><div class="channel-cell"><div class="channel-mode"><span class="channel-check">✓</span><div>Independent newsletter posts, Notes, comments and analyst/creator discussion about the collaboration.</div></div></div></div>
+  <div class="channel-row"><div class="channel-cell"><div class="channel-name">Mastodon</div></div><div class="channel-cell"><div class="channel-mode"><span class="channel-check">✓</span><div>Canonical brand accounts where they exist, with instance + account identity preserved.</div></div></div><div class="channel-cell"><div class="channel-mode"><span class="channel-check">✓</span><div>Public posts, replies and hashtags across discoverable instances; preserve instance/domain because federation makes identity and coverage non-global.</div></div></div></div>
+</div>
+<div class="channel-caveat"><strong>Coverage rule:</strong> “Enabled” means the system attempts collection where the platform, provider, permissions and public visibility allow it. It must never imply complete platform coverage. Private Facebook Groups, private LinkedIn activity, closed communities, deleted content, non-indexed Mastodon instances, and API/provider gaps are recorded as explicit missingness—not zero conversation.</div></div>
+<div class="method-card full"><div class="section-label">Query recipes</div><h2>How to find the same evidence again</h2><div class="query-code">PAIR DISCOVERY
 "Brand A" "Brand B" collaboration
 "Brand A" x "Brand B"
 "Brand A" × "Brand B"
 "Brand A" "Brand B" collection OR campaign OR partnership
 
-OFFICIAL SOURCES
+OFFICIAL BRAND SOURCES
 site:brand-a.com "Brand B"
 site:brand-b.com "Brand A"
 site:brand-a.com/news OR /press OR /editorial "Brand B"
+site:brand-b.com/news OR /press OR /editorial "Brand A"
 
-OWNED SOCIAL DISCOVERY
-"@brandhandle" "Partner Brand" Instagram
-site:instagram.com/p "Brand A" "Brand B"
-site:youtube.com "Brand A" "Brand B"
+OWNED / OFFICIAL CHANNEL DISCOVERY
+Instagram   site:instagram.com "Brand A" "Brand B" "@brandhandle"
+YouTube     site:youtube.com "Brand A" "Brand B" "@brandhandle"
+X           site:x.com "Brand A" "Brand B" from/canonical brand account where provider supports it
+TikTok      site:tiktok.com "Brand A" "Brand B" "@brandhandle"
+LinkedIn    site:linkedin.com/posts "Brand A" "Brand B" + canonical company / executive accounts
+Facebook    site:facebook.com "Brand A" "Brand B" + official Page / public brand-run Group
+Reddit      site:reddit.com "Brand A" "Brand B" + verified brand account where present
+Pinterest   site:pinterest.com "Brand A" "Brand B" + official profile / board
+Substack    site:substack.com "Brand A" "Brand B" + official brand publication
+Mastodon    "Brand A" "Brand B" site:mastodon.social OR known canonical instance
+            Preserve @account@instance identity.
 
-PRESS
+CONVERSATION / EARNED DISCOVERY
+Instagram   public posts + Reels + comments + mentions + hashtags
+YouTube     reviews + reactions + Shorts + comments
+X           mentions + quote-posts + replies + threads + hashtags
+TikTok      UGC + stitches + duets + reviews + comments + hashtag/sound participation
+LinkedIn    member posts + comments + trade/agency/executive discussion
+Facebook    public Pages + public Groups + posts + shares + comments
+Reddit      relevant subreddit posts + comments; retain subreddit + thread IDs
+Pinterest   public Pins + boards + linked sources + save/repin signals where available
+Substack    independent posts + Notes + comments
+Mastodon    public posts + replies + hashtags across discoverable instances
+
+PAIR QUERY VARIANTS FOR EVERY CHANNEL
+"Brand A" "Brand B"
+"Brand A" x "Brand B"
+"Brand A" × "Brand B"
+"Brand A" "Brand B" collab OR collaboration OR collection OR campaign OR partnership
+campaign name / product name / official hashtag / launch phrase
+
+PRESS / EDITORIAL
 "Brand A" "Brand B" -retailer -resale
 launch_date-7d → launch_date+30d
-Then canonicalize URL, publisher, date and syndication family.</div></div>
-            <div class="method-card full"><div class="section-label">Minimum source record</div><h2>Fields the real build should persist</h2><table class="method-table"><thead><tr><th>Field</th><th>Why it exists</th><th>Example</th></tr></thead><tbody><tr><td>source_id / study_id</td><td>Stable identity and joins</td><td>src_supreme_email_20260907</td></tr><tr><td>source_type + tier</td><td>Authority and display rules</td><td>official_product · A</td></tr><tr><td>canonical_url</td><td>Re-find and dedupe</td><td>Original article/product URL</td></tr><tr><td>published_at / captured_at</td><td>Separate event time from observation time</td><td>2026-09-10 / 2026-09-23</td></tr><tr><td>scope</td><td>Pair vs Brand A vs Brand B</td><td>collaboration_brand: Supreme</td></tr><tr><td>evidence_class</td><td>Observed vs estimate vs first-party</td><td>public_observation</td></tr><tr><td>metric + unit + value</td><td>Typed metric, not prose</td><td>youtube_views · count · 1,351,574</td></tr><tr><td>observed_at</td><td>Snapshot metrics change</td><td>2026-09-23T…</td></tr><tr><td>asset_url + credit</td><td>Visual provenance</td><td>Barbour CDN · Barbour/Paul Smith</td></tr><tr><td>rights_status</td><td>Controls public rendering</td><td>link_only / approved / unknown</td></tr><tr><td>completeness</td><td>Avoid pretending top-N is the whole corpus</td><td>complete_for_request / partial</td></tr><tr><td>review_status</td><td>Human publication gate</td><td>accepted / rejected / pending</td></tr><tr><td>content_hash / revision</td><td>Detect source changes without rewriting history</td><td>sha256… / rev 2</td></tr></tbody></table></div>
-            <div class="method-card third"><div class="section-label">Launch cadence</div><h3>Campaign + owned media</h3><p>Capture at announcement/launch, then 72 hours and day 7 for post engagement where permitted. Record the exact post ID and denominator.</p></div><div class="method-card third"><div class="section-label">Monitoring cadence</div><h3>Press + public conversation</h3><p>Run daily during launch week, then weekly through day 30. Deduplicate canonical articles and retain the query/corpus definition.</p></div><div class="method-card third"><div class="section-label">Outcome cadence</div><h3>7 / 30 / 90-day study</h3><p>Freeze a baseline before launch when possible. Never reconstruct historical follower snapshots from a current value.</p></div>
+
+NORMALIZATION
+For every result persist:
+platform + channel_role (owned | conversation)
+canonical account/community ID
+canonical content URL / post ID
+author/account + publisher/community
+published_at + captured_at + observed_at
+content type (post | video | comment | thread | pin | newsletter | group post)
+parent/root thread ID when applicable
+query/corpus version + completeness
+market/language + visibility/access class
+engagement snapshot + denominator where actually available
+
+Then canonicalize URLs, deduplicate cross-posts/syndication, preserve thread relationships,
+and never merge owned-media metrics with public-conversation metrics.</div></div>
+            <div class="method-card full"><div class="section-label">Minimum source record</div><h2>Fields the real build should persist</h2><table class="method-table"><thead><tr><th>Field</th><th>Why it exists</th><th>Example</th></tr></thead><tbody><tr><td>source_id / study_id</td><td>Stable identity and joins</td><td>src_supreme_email_20260907</td></tr><tr><td>source_type + tier</td><td>Authority and display rules</td><td>official_product · A</td></tr><tr><td>platform + channel_role</td><td>Keep owned voice separate from conversation</td><td>reddit · conversation</td></tr><tr><td>account / community ID</td><td>Canonical publisher identity across handles, groups and federated instances</td><td>@brand@instance / r/fashion</td></tr><tr><td>content_type + parent_id</td><td>Preserve post/thread/comment relationships</td><td>comment · parent post ID</td></tr><tr><td>query_id / corpus_version</td><td>Make discovery reproducible over time</td><td>pair_social_v3</td></tr><tr><td>visibility / access class</td><td>Distinguish public, permissioned, private and unavailable sources</td><td>public_group / private_unavailable</td></tr><tr><td>canonical_url</td><td>Re-find and dedupe</td><td>Original article/product URL</td></tr><tr><td>published_at / captured_at</td><td>Separate event time from observation time</td><td>2026-09-10 / 2026-09-23</td></tr><tr><td>scope</td><td>Pair vs Brand A vs Brand B</td><td>collaboration_brand: Supreme</td></tr><tr><td>evidence_class</td><td>Observed vs estimate vs first-party</td><td>public_observation</td></tr><tr><td>metric + unit + value</td><td>Typed metric, not prose</td><td>youtube_views · count · 1,351,574</td></tr><tr><td>observed_at</td><td>Snapshot metrics change</td><td>2026-09-23T…</td></tr><tr><td>asset_url + credit</td><td>Visual provenance</td><td>Barbour CDN · Barbour/Paul Smith</td></tr><tr><td>rights_status</td><td>Controls public rendering</td><td>link_only / approved / unknown</td></tr><tr><td>completeness</td><td>Avoid pretending top-N is the whole corpus</td><td>complete_for_request / partial</td></tr><tr><td>review_status</td><td>Human publication gate</td><td>accepted / rejected / pending</td></tr><tr><td>content_hash / revision</td><td>Detect source changes without rewriting history</td><td>sha256… / rev 2</td></tr></tbody></table></div>
+            <div class="method-card third"><div class="section-label">Launch cadence</div><h3>Campaign + owned media</h3><p>Capture official brand/site/social activity at announcement and launch, then snapshot eligible post metrics at 72 hours and day 7. Preserve canonical IDs, channel role, post age and denominator.</p></div><div class="method-card third"><div class="section-label">Monitoring cadence</div><h3>Press + public conversation</h3><p>Search every enabled conversation channel daily during launch week, then weekly through day 30. Keep platform corpora separate, deduplicate within each counting universe, and record coverage gaps explicitly.</p></div><div class="method-card third"><div class="section-label">Outcome cadence</div><h3>7 / 30 / 90-day study</h3><p>Freeze a baseline before launch when possible. Never reconstruct historical follower snapshots from a current value.</p></div>
             <div class="method-card full"><div class="section-label">Prototype boundary</div><h2>Verified studies vs illustrative opportunity data</h2><p>The four third-party studies in the Observatory use verified public sources and explicit caveats. BRUT × FAUX / BRUT × Bowery-style opportunity scenarios elsewhere in this prototype remain illustrative unless a source explicitly says otherwise. The production build should preserve that distinction at the data-model level, not only in copy.</p></div>
           </div>
         </div>
