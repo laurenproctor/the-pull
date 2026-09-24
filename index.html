@@ -1268,12 +1268,12 @@
       <div style="margin-top:28px">
         <div class="side-label">Active opportunity</div>
         <div class="project-nav" id="projectNav">
-          <button data-screen="brief">1. Define</button>
+          <button data-screen="brief">1. Brief</button>
           <button class="active" data-screen="discover">2. Discover</button>
-          <button data-screen="assessment">3. Assess</button>
+          <button data-screen="assessment">3. Assessment</button>
           <button data-screen="compare">4. Compare</button>
-          <button data-screen="opportunity">5. Form proposition</button>
-          <button data-screen="tracker">6. Pursue</button>
+          <button data-screen="opportunity">5. Opportunity brief</button>
+          <button data-screen="tracker">6. Pursuit</button>
         </div>
       </div>
     </div>
@@ -1347,7 +1347,7 @@
             <h1>Collaboration brief</h1>
             <p class="lede">Frame the business problem, value exchange, and non-negotiables before asking the system to recommend partners.</p>
           </div>
-          <div style="display:flex;gap:8px"><button class="button secondary">Save draft</button><button class="button" onclick="go('discover')">Begin discovery</button></div>
+          <div style="display:flex;gap:8px"><button class="button secondary save-draft-action" type="button">Save draft</button><button class="button" id="beginDiscovery" type="button">Begin discovery</button></div>
         </div>
 
         <div class="grid">
@@ -1364,7 +1364,7 @@
               <button class="choice"><div class="choice-title">Open distribution</div><div class="choice-copy">Gain physical or digital access through a partner’s channels or locations.</div></button>
             </div>
             <div class="divider"></div>
-            <div class="field"><label>What would make this collaboration worth doing?</label><textarea>BRUT reaches a high-fit downtown audience in a setting that makes the product more meaningful, while generating enough qualified attention and press to justify the total activation cost.</textarea></div>
+            <div class="field" id="worthDoingField"><label>What would make this collaboration worth doing? <span aria-hidden="true">*</span></label><textarea id="worthDoingInput" aria-describedby="worthDoingError">BRUT reaches a high-fit downtown audience in a setting that makes the product more meaningful, while generating enough qualified attention and press to justify the total activation cost.</textarea><div class="field-error" id="worthDoingError" role="alert">Add a short success definition before beginning discovery.</div></div>
             <div class="field" style="margin-top:12px"><label>Desired customer shift</label><input value="People who encounter BRUT through the collaboration understand it as part of downtown design culture, not simply another clothing label." /></div>
             <div class="field" style="margin-top:12px"><label>What must the partner contribute?</label><input value="Physical context, cultural credibility, recurring foot traffic, a strong visual identity, and willingness to actively participate." /></div>
             <div style="margin-top:16px"><div class="section-label">Secondary goals</div><div class="chip-row"><span class="tag">Earned press</span><span class="tag">Qualified traffic</span><span class="tag">Local relevance</span><span class="tag">Reusable content</span></div></div>
@@ -2031,6 +2031,7 @@
               <div class="study-title-card visual-study">
                 <div class="study-title-layout">
                   <div class="study-title-copy">
+                    <button class="study-back-button" type="button" onclick="setObservatoryView('library')">← Back to collaboration library</button>
                     <div class="row start"><div><div class="section-label" id="studyLabel">Observed study · Fashion × workwear</div><h2 id="studyTitle">Budweiser × Dickies</h2><p class="muted small" id="studySubtitle">Campaign imagery, owned social prompts, public facts, and press coverage are collected here so the Observatory feels like a living study—not only a metric shell.</p></div><span class="pill good" id="studyStatus">Live study</span></div>
                     <div class="study-scope"><button class="active">Partnership</button><button id="scopeA">Budweiser</button><button id="scopeB">Dickies</button></div>
                     <div class="window-tabs"><button class="active">Launch</button><button>30 days</button><button>90 days</button></div>
@@ -2203,6 +2204,8 @@ Then canonicalize URL, publisher, date and syndication family.</div></div>
   </main>
 </div>
 
+
+<div class="system-toast hidden" id="systemToast" role="status" aria-live="polite"><div class="system-toast-copy"><strong id="systemToastTitle">Saved</strong><span id="systemToastMessage">Your change was recorded.</span></div><button class="toast-action hidden" id="systemToastAction" type="button">Undo</button></div>
 
 <div class="success-toast hidden" id="successToast" role="status" aria-live="polite"><span class="success-toast-icon">✓</span><div><strong>Decision recorded</strong><span>Partner Studio can keep moving.</span></div></div>
 
