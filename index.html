@@ -1561,11 +1561,18 @@
         overflow-y:auto!important;
         overscroll-behavior:contain;
         transform:translateX(-104%);
-        transition:transform .22s ease;
+        visibility:hidden;
+        pointer-events:none;
+        transition:transform .22s ease,visibility 0s linear .22s;
         box-shadow:0 0 0 transparent;
+        padding-top:max(22px,env(safe-area-inset-top))!important;
+        padding-bottom:max(22px,env(safe-area-inset-bottom))!important;
       }
       .sidebar.mobile-open{
         transform:translateX(0);
+        visibility:visible;
+        pointer-events:auto;
+        transition:transform .22s ease,visibility 0s;
         box-shadow:24px 0 70px rgba(0,0,0,.24);
       }
       .mobile-nav-backdrop{
@@ -1590,6 +1597,8 @@
         background:#fff;
         color:var(--ink);
         padding:0;
+        touch-action:manipulation;
+        -webkit-tap-highlight-color:transparent;
       }
       .mobile-nav-toggle-lines{width:18px;display:flex;flex-direction:column;gap:4px}
       .mobile-nav-toggle-lines i{display:block;height:1.5px;background:currentColor;border-radius:2px}
@@ -3055,33 +3064,42 @@ and never merge owned-media metrics with public-conversation metrics.</div></div
     if(!appSidebar) return;
     const isMobile=mobileNavQuery.matches;
     const isOpen=appSidebar.classList.contains("mobile-open");
-    appSidebar.inert=isMobile&&!isOpen;
+    // Avoid HTMLElement.inert here: toggling inert during a tap can interrupt
+    // the navigation click on mobile Safari. Visibility/pointer-events handle
+    // the closed state; aria-hidden communicates it to assistive tech.
     appSidebar.setAttribute("aria-hidden",isMobile&&!isOpen?"true":"false");
     mobileNavToggle?.setAttribute("aria-expanded",isOpen?"true":"false");
+    mobileNavToggle?.setAttribute("aria-label",isOpen?"Close navigation":"Open navigation");
     mobileNavBackdrop?.setAttribute("aria-hidden",isOpen?"false":"true");
   }
 
   function setMobileNavOpen(open,{restoreFocus=true}={}){
     if(!appSidebar) return;
-    if(!mobileNavQuery.matches) open=false;
-    appSidebar.classList.toggle("mobile-open",open);
-    mobileNavBackdrop?.classList.toggle("open",open);
-    document.body.classList.toggle("mobile-nav-open",open);
+    const shouldOpen=mobileNavQuery.matches && !!open;
+    appSidebar.classList.toggle("mobile-open",shouldOpen);
+    mobileNavBackdrop?.classList.toggle("open",shouldOpen);
+    document.body.classList.toggle("mobile-nav-open",shouldOpen);
     syncMobileNavA11y();
-    if(open){
-      window.setTimeout(()=>mobileNavClose?.focus(),60);
+    if(shouldOpen){
+      window.setTimeout(()=>mobileNavClose?.focus({preventScroll:true}),40);
     }else if(restoreFocus && mobileNavQuery.matches){
-      mobileNavToggle?.focus();
+      window.setTimeout(()=>mobileNavToggle?.focus({preventScroll:true}),0);
     }
   }
 
-  mobileNavToggle?.addEventListener("click",()=>setMobileNavOpen(true));
+  mobileNavToggle?.addEventListener("click",()=>{
+    const next=!appSidebar?.classList.contains("mobile-open");
+    setMobileNavOpen(next);
+  });
   mobileNavClose?.addEventListener("click",()=>setMobileNavOpen(false));
   mobileNavBackdrop?.addEventListener("click",()=>setMobileNavOpen(false));
 
+  // Let the destination handler finish first, then close the drawer.
   appSidebar?.querySelectorAll("[data-primary],[data-screen],[data-client-screen]").forEach(btn=>{
     btn.addEventListener("click",()=>{
-      if(mobileNavQuery.matches) setMobileNavOpen(false,{restoreFocus:false});
+      if(mobileNavQuery.matches){
+        window.setTimeout(()=>setMobileNavOpen(false,{restoreFocus:false}),0);
+      }
     });
   });
 
@@ -3091,12 +3109,18 @@ and never merge owned-media metrics with public-conversation metrics.</div></div
     }
   });
 
-  mobileNavQuery.addEventListener?.("change",()=>{
+  function resetMobileNavForViewport(){
     appSidebar?.classList.remove("mobile-open");
     mobileNavBackdrop?.classList.remove("open");
     document.body.classList.remove("mobile-nav-open");
     syncMobileNavA11y();
-  });
+  }
+
+  if(typeof mobileNavQuery.addEventListener==="function"){
+    mobileNavQuery.addEventListener("change",resetMobileNavForViewport);
+  }else if(typeof mobileNavQuery.addListener==="function"){
+    mobileNavQuery.addListener(resetMobileNavForViewport);
+  }
 
   syncMobileNavA11y();
 
