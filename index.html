@@ -1223,6 +1223,29 @@
       }
     }
 
+  
+    /* NN/g heuristic UX pass */
+    .system-toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);z-index:350;display:flex;align-items:center;gap:14px;width:min(560px,calc(100vw - 32px));padding:14px 16px;background:#111418;color:#fff;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.24)}
+    .system-toast.hidden{display:none!important}
+    .system-toast-copy{min-width:0;flex:1}
+    .system-toast strong{display:block;font-size:13px}
+    .system-toast span{display:block;margin-top:3px;font-size:11px;line-height:1.45;color:#c2c9ce}
+    .system-toast .toast-action{flex:0 0 auto;border:1px solid rgba(255,255,255,.35);background:transparent;color:#fff;padding:8px 11px;border-radius:10px;font-weight:700}
+    button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible,[tabindex]:focus-visible{box-shadow:0 0 0 3px rgba(28,88,64,.18),0 0 0 1px #1c5840!important;border-color:#1c5840!important}
+    .field-error{display:none;margin-top:2px;color:#a52a22;font-size:12px;line-height:1.4;font-weight:650}
+    .field.has-error input,.field.has-error textarea,.field.has-error select{border-color:#b3261e!important;background:#fffafa}
+    .field.has-error .field-error{display:block}
+    .study-back-button{display:inline-flex;align-items:center;gap:7px;border:0;background:transparent;color:#496159;padding:0;margin:0 0 18px;font-size:12px;font-weight:700;text-decoration:underline;text-underline-offset:4px}
+    details.page-help{margin:28px 0 0;border-top:1px solid var(--line);padding-top:18px}
+    details.page-help summary{cursor:pointer;list-style:none;display:inline-flex;align-items:center;gap:8px;color:#5d6861;font-size:12px;font-weight:700}
+    details.page-help summary::-webkit-details-marker{display:none}
+    details.page-help summary:after{content:'+';font-size:16px;font-weight:500}
+    details.page-help[open] summary:after{content:'−'}
+    details.page-help .context-strip{margin-top:16px}
+    details.page-help .context-cell{box-shadow:none;background:#fafbfa}
+    .side-nav button,.project-nav button,.client-side-nav button,.screen-tabs button,.obs-tabs button,.study-scope button,.window-tabs button,.segmented button,.choice{min-height:40px}
+    @media(max-width:680px){.button,.side-nav button,.project-nav button,.client-side-nav button,.screen-tabs button,.obs-tabs button,.study-scope button,.window-tabs button,.segmented button,.choice,.role-picker select,.icon-close{min-height:44px}.system-toast{bottom:16px;align-items:flex-start}details.page-help .context-strip{grid-template-columns:1fr}}
+
   </style>
 </head>
 <body>
