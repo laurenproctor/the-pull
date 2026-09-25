@@ -225,14 +225,30 @@ function obsBrandLink(id){
  const b=obsBrands.find(x=>x.id===id);return `<button type="button" class="obs-brand-link" data-obs-brand="${id}">${evidenceEscape(b?.name||id)}</button>`;
 }
 
+function obsMonitoringWindow(records){
+ const dates=records.flatMap(c=>{
+  const study=observatoryStudies[c.id];
+  return [...(study.sources||[]).map(source=>source.captured),...studySocialRecords(c.id,study).map(post=>post.collectedAt)];
+ }).filter(evidenceDate).map(date=>date.slice(0,10)).sort();
+ if(!dates.length)return '<p class="obs-monitoring"><strong>Monitoring period</strong><span>Collection dates not recorded.</span></p>';
+ const format=date=>new Date(date+'T00:00:00Z').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric',timeZone:'UTC'});
+ const first=dates[0],last=dates[dates.length-1];
+ return `<p class="obs-monitoring"><strong>Monitoring period</strong><span>${format(first)}${first===last?'':' – '+format(last)}</span><small>Recorded collection window · not continuous monitoring</small></p>`;
+}
+function obsCardImage(c){
+ const study=observatoryStudies[c.id],url=evidenceUrl(study.heroImage);
+ if(!url)return '<p class="obs-image-unavailable">Collaboration image not available.</p>';
+ return `<figure class="obs-card-media"><a href="/observatory/studies/${c.id}" data-obs-study="${c.id}"><img src="${evidenceEscape(url)}" alt="${evidenceEscape(study.title)} — collaboration imagery" loading="lazy" onerror="this.hidden=true;this.parentElement.nextElementSibling.textContent='Image unavailable. Open the study for source links.'"></a><figcaption>${evidenceEscape(study.title)} · ${evidenceEscape(study.heroNote||'Source imagery')}</figcaption></figure>`;
+}
+
 function obsCollabCard(c){
  const s=observatoryStudies[c.id];const verticals=[...new Set(c.brands.map(id=>obsBrands.find(b=>b.id===id).vertical))];
- return `<article class="obs-record-card"><div class="obs-record-top"><span>${evidenceEscape(verticals.join(' × '))}</span><time datetime="${c.date}">${new Date(c.date).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric',timeZone:'UTC'})}</time></div><h3><a href="/observatory/studies/${c.id}" data-obs-study="${c.id}">${evidenceEscape(s.title)}</a></h3><p>${evidenceEscape(c.summary)}</p><div class="obs-brand-links">${c.brands.map(obsBrandLink).join('<span>×</span>')}</div><footer><span>${evidenceEscape(c.format)}</span><a href="/observatory/studies/${c.id}" data-obs-study="${c.id}">Open study ↗</a></footer></article>`;
+ return `<article class="obs-record-card">${obsCardImage(c)}<div class="obs-record-top"><span>${evidenceEscape(verticals.join(' × '))}</span><time datetime="${c.date}">${new Date(c.date).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric',timeZone:'UTC'})}</time></div><h3><a href="/observatory/studies/${c.id}" data-obs-study="${c.id}">${evidenceEscape(s.title)}</a></h3><p>${evidenceEscape(c.summary)}</p>${obsMonitoringWindow([c])}<div class="obs-brand-links">${c.brands.map(obsBrandLink).join('<span>×</span>')}</div><footer><span>${evidenceEscape(c.format)}</span><a href="/observatory/studies/${c.id}" data-obs-study="${c.id}">Open study ↗</a></footer></article>`;
 }
 
 function obsBrandCards(records){
  const matched=new Set(records.flatMap(c=>c.brands));const brands=obsBrands.filter(b=>matched.has(b.id)&&(!obsState.brand||b.id===obsState.brand)&&(!obsState.vertical||b.vertical===obsState.vertical));
- return brands.length?`<div class="obs-record-grid">${brands.map(b=>{const all=obsCatalog.filter(c=>c.brands.includes(b.id)),visible=records.filter(c=>c.brands.includes(b.id)),partners=[...new Set(all.flatMap(c=>c.brands).filter(id=>id!==b.id))];return `<article class="obs-record-card"><div class="obs-record-top"><span>${evidenceEscape(b.vertical)}</span><span>${evidenceEscape(b.category)}</span></div><h3>${evidenceEscape(b.name)}</h3><div class="obs-brand-kpis"><div><strong>${all.length}</strong><span>collaboration${all.length===1?'':'s'} in database</span></div><div><strong>${partners.length}</strong><span>partner${partners.length===1?'':'s'}</span></div></div><p>${visible.length} collaboration${visible.length===1?' matches':'s match'} your current filters.</p><div class="obs-brand-links">${partners.map(obsBrandLink).join('')}</div><footer><span>One brand record · linked studies</span><button type="button" data-obs-profile="${b.id}">View brand history →</button></footer></article>`}).join('')}</div>`:'<div class="obs-empty">No brands match these filters.</div>';
+ return brands.length?`<div class="obs-record-grid">${brands.map(b=>{const all=obsCatalog.filter(c=>c.brands.includes(b.id)),visible=records.filter(c=>c.brands.includes(b.id)),partners=[...new Set(all.flatMap(c=>c.brands).filter(id=>id!==b.id))];return `<article class="obs-record-card">${obsCardImage([...visible].sort((a,b)=>b.date.localeCompare(a.date))[0])}<div class="obs-record-top"><span>${evidenceEscape(b.vertical)}</span><span>${evidenceEscape(b.category)}</span></div><h3>${evidenceEscape(b.name)}</h3><div class="obs-brand-kpis"><div><strong>${all.length}</strong><span>collaboration${all.length===1?'':'s'} in database</span></div><div><strong>${partners.length}</strong><span>partner${partners.length===1?'':'s'}</span></div></div><p>${visible.length} collaboration${visible.length===1?' matches':'s match'} your current filters.</p>${obsMonitoringWindow(all)}<div class="obs-brand-links">${partners.map(obsBrandLink).join('')}</div><footer><span>One brand record · linked studies</span><button type="button" data-obs-profile="${b.id}">View brand history →</button></footer></article>`}).join('')}</div>`:'<div class="obs-empty">No brands match these filters.</div>';
 }
 
 function obsEvents(records){

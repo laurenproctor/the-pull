@@ -37,7 +37,7 @@
     const dark=document.documentElement.dataset.theme==='dark';
     document.querySelectorAll('[data-theme-toggle]').forEach(b=>{
       b.setAttribute('aria-checked',String(dark));b.title=dark?'Switch to light mode':'Switch to dark mode';
-      b.innerHTML=icon(dark?'moon':'sun')+'<span>'+ (dark?'Dark':'Light')+'</span>';
+      b.innerHTML='<span class="pull-switch-track" aria-hidden="true"><span class="pull-switch-thumb">'+icon(dark?'moon':'sun')+'</span></span><span class="pull-switch-label">'+(dark?'Dark':'Light')+'</span>';
     });
   }
   function init(){

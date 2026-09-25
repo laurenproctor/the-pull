@@ -10,7 +10,7 @@
   }
   const form=document.getElementById('enquiry-form');
   if(!form)return;
-  const interestLabels={general:'A collaboration / general inquiry',sprint:'Opportunity Sprint ($5,000)',managed:'Managed Collaboration (from $30,000)',programme:'Ongoing collaboration program',legal:'Independent agreement review (fee confirmed by counsel)'};
+  const interestLabels={general:'A collaboration / general inquiry',press:'Press inquiry',sprint:'Opportunity Sprint ($5,000)',managed:'Managed Collaboration (from $30,000)',programme:'Ongoing collaboration program',legal:'Independent agreement review (fee confirmed by counsel)'};
   const interest=document.getElementById('enquiry-interest');
   const requested=new URLSearchParams(location.search).get('interest');
   if(interest&&Object.hasOwn(interestLabels,requested))interest.value=requested;
@@ -21,7 +21,7 @@
     const data=new FormData(form),clean=key=>String(data.get(key)||'').trim();
     const selectedInterest=interestLabels[clean('interest')]||interestLabels.general;
     const subject=selectedInterest+(clean('company')?' — '+clean('company'):'');
-    const body=`Hello The Pull,\n\n${clean('message')}\n\nInterested in: ${selectedInterest}\nStarting point: ${clean('stage')}\nBrand / company: ${clean('company')||'Not specified'}\n\n${clean('name')}\n${clean('email')}`;
+    const body=`Hello The Pull,\n\n${clean('message')}\n\nInterested in: ${selectedInterest}\nStarting point: ${clean('stage')}\nBrand / company: ${clean('company')||'Not specified'}\n\n${[clean('firstName'),clean('lastName')].filter(Boolean).join(' ')}\n${clean('email')}\nPhone: ${clean('phone')||'Not provided'}`;
     draft.value=`To: support@the---pull.com\nSubject: ${subject}\n\n${body}`;
     email.href='mailto:support@the---pull.com?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);
     preview.hidden=false;status.textContent='Draft prepared. Review it below, then open your email app to send.';draft.focus();
