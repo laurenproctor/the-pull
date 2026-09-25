@@ -1834,6 +1834,7 @@
     }
   
   </style>
+  <link rel="stylesheet" href="/study-evidence.css">
 </head>
 <body>
 <div class="app">
@@ -2910,26 +2911,32 @@
 
               <div class="study-section-head"><div><div class="section-label">Campaign visuals</div><h3>See what actually shipped.</h3><p>Official product and campaign imagery anchors the study in the thing customers were shown—not only in the write-up about it.</p></div><span class="source-pill" id="gallerySourcePill">Official product pages</span></div>
               <div class="study-gallery" id="studyGallery"></div>
+              <div id="studyGalleryCollected"></div>
+              <div id="studyDigitalCoverage"></div>
 
               <div class="study-section-head"><div><div class="section-label">Social evidence</div><h3>What the brands published—and what people said back.</h3><p>Owned posts and public conversation are separate evidence sets. They should never share one engagement denominator.</p></div><span class="source-pill">Owned + conversation</span></div>
               <div class="social-evidence-block">
                 <div class="social-subhead"><div><div class="section-label">Brand-owned posts</div><h4>Posts published by the brands or their corporate owners</h4><p>Canonical brand channels where available. A profile/feed URL is labeled when the collector could not recover a durable post permalink.</p></div><span class="pill good">Owned</span></div>
-                <div class="social-preview-grid" id="studyOwnedSocial"></div>
+                <div class="study-network-list" id="studyOwnedSocial"></div>
+                <div id="studyOwnedCollected"></div>
                 <div class="social-subhead"><div><div class="section-label">Conversation / earned</div><h4>Posts from people and organizations outside the two brands</h4><p>Entrant replies, community commentary, distributor amplification, and other public conversation about the collaboration.</p></div><span class="pill info">Public conversation</span></div>
-                <div class="social-preview-grid" id="studyConversationSocial"></div>
+                <div class="study-network-list" id="studyConversationSocial"></div>
+                <div id="studyEarnedCollected"></div>
                 <div class="social-evidence-note" id="studySocialCoverageNote">Coverage reflects posts that were publicly discoverable in this research pass. Missing or inaccessible platform content is not treated as zero conversation.</div>
               </div>
 
               <div class="study-section-head"><div><div class="section-label">Public metrics</div><h3>What the public record gives us</h3><p>These are campaign facts and launch metrics visible from public materials. They are useful context, not performance proof.</p></div><span class="source-pill">Observed + partner-stated</span></div>
               <div class="metric-family-grid" id="publicMetricFamilies"></div>
+              <div id="studyMetricsCollected"></div>
 
               <div class="study-section-head"><div><div class="section-label">Press preview</div><h3>Coverage the launch earned</h3><p>Press previews help you see the editorial angle different publications picked up—not merely the number of mentions.</p></div><span class="source-pill">Public coverage</span></div>
               <div class="press-preview-grid" id="studyPress"></div>
+              <div id="studyPressCollected"></div>
             </div>
             <aside class="study-side">
               <div class="card"><div class="section-label">Evidence coverage</div><div class="coverage-donut"><div class="donut-copy"><strong id="coveragePct">66%</strong><span id="coverageLabel">Good public coverage</span></div></div><p class="muted small" style="text-align:center" id="coverageCopy">Campaign visuals, assortment facts, contest mechanics, and launch coverage are documented. Partner-owned commercial outcomes remain unknown.</p></div>
               <div class="card"><div class="section-label">Study notes</div><div class="baseline-list" id="studyFacts"></div></div>
-              <div class="card"><div class="section-label">Sources used in this study</div><div class="source-list" id="studySources"></div></div>
+              <div class="card"><div class="section-label">Sources used in this study</div><div class="source-list" id="studySources"></div><div id="studyPageCollected"></div></div>
               <button class="button observatory secondary evidence-trigger">Open evidence drawer</button>
             </aside>
           </div>
@@ -3228,6 +3235,7 @@ and never merge owned-media metrics with public-conversation metrics.</div></div
   </div>
 </div>
 
+<script src="/study-evidence.js"></script>
 <script>
   const screens = ["brief","discover","assessment","compare","opportunity","tracker","observatory","analytics","legal","creative","campaign"];
 
@@ -3704,9 +3712,7 @@ and never merge owned-media metrics with public-conversation metrics.</div></div
     const hero=document.getElementById('studyHeroArt');if(hero){hero.style.backgroundImage=s.heroImage?`url(\"${s.heroImage}\"), url(\"${s.fallbackImage}\")`:`url(\"${s.fallbackImage}\")`;hero.dataset.sourceUrl=s.heroImage||'';hero.classList.add('real')}
     const kpis=document.getElementById('studyKpis');if(kpis)kpis.innerHTML=(s.kpis||[]).map(k=>`<div class="study-kpi"><span>${k.label}</span><strong>${k.value}</strong><small>${k.note}</small></div>`).join('');
     const gallery=document.getElementById('studyGallery');if(gallery)gallery.innerHTML=(s.gallery&&s.gallery.length)?s.gallery.map(g=>`<div class="study-image-card"><img src="${s.fallbackImage}" data-source-url="${g.img}" alt="${g.title}" loading="lazy"><div class="body"><span class="source-pill">Prototype photo · source linked</span><strong style="display:block;margin-top:8px">${g.title}</strong><p class="muted small" style="margin-top:8px">${g.copy}</p></div></div>`).join(''):`<div class="study-empty" style="grid-column:1/-1">No verified visual asset attached.</div>`;
-    const renderSocialPost=p=>`<article class="social-post-card"><div class="social-post-head"><div class="social-post-author"><div class="social-platform-badge">${p.badge||p.platform}</div><div><strong>${p.handle}</strong><span>${p.platform} · ${p.accountRole||""}</span></div></div><span class="pill">${p.platform}</span></div><div class="social-post-quote">“${p.quote}”</div><div class="social-post-tags">${(p.tags||[]).map(t=>`<span class="tag">${t}</span>`).join('')}</div><div class="social-post-source"><small><strong>${p.sourceType||"Public source"}.</strong> ${p.captureNote||""}</small><a href="${p.sourceUrl}" target="_blank" rel="noopener noreferrer">Open source ↗</a></div></article>`;
-    const owned=document.getElementById('studyOwnedSocial');const ownedPosts=s.ownedSocial||s.social||[];if(owned)owned.innerHTML=ownedPosts.length?ownedPosts.map(p=>p.quote?renderSocialPost(p):`<article class="social-post-card"><div class="social-post-head"><div class="social-post-author"><div class="social-platform-badge">${p.badge}</div><div><strong>${p.handle}</strong><span>Owned/context</span></div></div></div><div class="social-post-quote">${p.copy}</div><div class="social-post-tags">${(p.engagement||[]).map(e=>`<span class="tag">${e}</span>`).join('')}</div></article>`).join(''):`<div class="study-empty" style="grid-column:1/-1">No verified brand-owned post recovered.</div>`;
-    const conversation=document.getElementById('studyConversationSocial');const conversationPosts=s.conversationSocial||[];if(conversation)conversation.innerHTML=conversationPosts.length?conversationPosts.map(renderSocialPost).join(''):`<div class="study-empty" style="grid-column:1/-1">No public conversation posts recovered in this source pack.</div>`;
+    renderStudyEvidence(id,s);
     const socialNote=document.getElementById('studySocialCoverageNote');if(socialNote)socialNote.textContent=s.socialCoverageNote||"Coverage reflects publicly discoverable posts from this research pass; missing content is not zero conversation.";
     const fam=document.getElementById('publicMetricFamilies');if(fam)fam.innerHTML=(s.metricFamilies||[]).map(f=>`<div class="metric-family"><h3>${f.title}</h3><div class="family-note">${f.note}</div>${(f.lines||[]).map(l=>`<div class="obs-metric-line"><span class="name">${l.name}</span><span class="value">${l.value}</span><span class="meta">${l.meta}</span></div>`).join('')}</div>`).join('');
     const press=document.getElementById('studyPress');if(press)press.innerHTML=(s.press&&s.press.length)?s.press.map((p,i)=>`<a class="press-preview-card" href="${p.link}" target="_blank" rel="noopener noreferrer"><div class="press-preview-image" style="background-image:url('${p.img || ((s.gallery&&s.gallery.length)?s.gallery[i%s.gallery.length].img:s.heroImage)}')"></div><div class="press-preview-body"><div class="press-brand-row"><div class="press-logo-wrap">${p.logo?`<img src="${p.logo}" alt="${p.pub} logo" loading="lazy">`:`<span class="press-logo-fallback">${p.pub}</span>`}</div><span class="pill">${p.date}</span></div><h4>${p.title}</h4><p>${p.summary}</p><div class="press-read-row"><span>Read coverage</span><span>↗</span></div></div></a>`).join(''):`<div class="study-empty" style="grid-column:1/-1">No validated press cards attached.</div>`;
