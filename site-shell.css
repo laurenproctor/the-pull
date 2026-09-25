@@ -18,3 +18,5 @@ html{color-scheme:light}html[data-theme="dark"]{color-scheme:dark}
 .pull-theme-toggle:focus-visible{outline:2px solid currentColor;outline-offset:4px}
 .pull-nav-group+.pull-nav-group{margin-top:24px}.pull-nav-group .project-nav{margin-top:4px}.pull-nav-utility{margin-top:24px;padding-top:16px;border-top:1px solid #ffffff25}
 @media(prefers-reduced-motion:reduce){.pull-theme-toggle .pull-switch-thumb{transition:none}}
+
+.sidebar .project-nav button{justify-content:flex-start}.sidebar .project-nav button>span{flex:1;text-align:left}
