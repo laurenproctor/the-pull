@@ -99,11 +99,11 @@ function evidenceMediaMarkup(media,post){
     else if(m.type==='youtube'){
       const parsed=new URL(url);const code=parsed.hostname==='youtu.be'?parsed.pathname.slice(1):parsed.searchParams.get('v');
       if(!/^[\w-]{11}$/.test(code||''))return '';
-      html=`<iframe title="${evidenceEscape(post.title||'YouTube post')}" src="https://www.youtube-nocookie.com/embed/${code}" loading="lazy" allow="fullscreen; picture-in-picture" allowfullscreen></iframe>`;
+      html=`<iframe title="${evidenceEscape(post.title||'YouTube post')}" hidden data-consent-src="https://www.youtube-nocookie.com/embed/${code}" loading="lazy" allow="fullscreen; picture-in-picture" allowfullscreen></iframe><div class="pull-media-blocked"><p>Social player paused. You choose whether to connect.</p><button type="button" data-cookie-settings>Media preferences</button><p>You can also open the original source below.</p></div>`;
     }else if(m.type==='instagram'){
       const parsed=new URL(url);const match=parsed.pathname.match(/^\/(p|reel)\/([\w-]+)\/?$/);
       if(!/(^|\.)instagram\.com$/.test(parsed.hostname)||!match)return '';
-      kind=' instagram';html=`<iframe title="${evidenceEscape(post.title||'Instagram post')}" src="https://www.instagram.com/${match[1]}/${match[2]}/embed/" loading="lazy" allow="fullscreen" allowfullscreen></iframe>`;
+      kind=' instagram';html=`<iframe title="${evidenceEscape(post.title||'Instagram post')}" hidden data-consent-src="https://www.instagram.com/${match[1]}/${match[2]}/embed/" loading="lazy" allow="fullscreen" allowfullscreen></iframe><div class="pull-media-blocked"><p>Social player paused. You choose whether to connect.</p><button type="button" data-cookie-settings>Media preferences</button><p>You can also open the original source below.</p></div>`;
     }
     if(!html)return '';
     return `<figure class="social-media${kind}">${html}<div class="social-media-fallback" hidden>Preview unavailable. Open the media or original post to view it.</div><figcaption>${caption}</figcaption><a class="media-source-link" href="${evidenceEscape(url)}" target="_blank" rel="noopener noreferrer">${m.type==='image'?'Open image':'Open original media'} ↗</a></figure>`;
@@ -190,3 +190,4 @@ function openStudyCollection(id,networkId,lane){
   });
   dialog.showModal();
 }
+
