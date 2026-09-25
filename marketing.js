@@ -167,6 +167,10 @@
 (() => {
   document.querySelectorAll('[data-pull-subscribe]').forEach(form=>{
     const status=form.querySelector('[data-subscription-status]');
+    if(form.hasAttribute('data-netlify')){
+      status.textContent=form.name==='pull-account-access'?'Access requests are not open yet. You can explore the public workspace preview while registration is being connected.':'Newsletter signup is not open yet. Please check back soon.';
+      form.querySelector('[type=submit]').disabled=true;
+    }
     const phone=form.querySelector('[data-sms-phone]'),sms=form.querySelector('[data-sms-consent]');
     const syncPhone=()=>{phone.required=sms.checked;phone.setCustomValidity(sms.checked&&!/^\+?[\d\s().-]{7,40}$/.test(phone.value.trim())?'Enter a phone number with country code for text updates.':'')};
     phone.addEventListener('input',syncPhone);sms.addEventListener('change',syncPhone);
