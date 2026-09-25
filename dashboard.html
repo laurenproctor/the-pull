@@ -3367,6 +3367,7 @@ and never merge owned-media metrics with public-conversation metrics.</div></div
 
   function go(name){
     if(currentRole !== "admin") return;
+    document.getElementById("profileScreen")?.classList.add("hidden");
     currentAdminScreen=name;
     document.getElementById("clientPortal")?.classList.add("hidden");
     screens.forEach(s => document.getElementById("screen-"+s).classList.toggle("hidden", s !== name));
@@ -4114,7 +4115,8 @@ and never merge owned-media metrics with public-conversation metrics.</div></div
     const ct=document.getElementById("contextTitle");if(ct)ct.textContent="Profile";
     const cm=document.getElementById("contextMeta");if(cm)cm.textContent="Account settings";
     renderProfileForRole(currentRole);
-    writeAppRoute("/profile","Profile");
+    const profilePath=currentRole==="admin"?"/profile":"/profile?brand="+currentRole+"&from="+currentClientScreen;
+    writeAppRoute(profilePath,"Profile");
     window.scrollTo({top:0,behavior:"smooth"});
   }
 
@@ -4285,10 +4287,19 @@ and never merge owned-media metrics with public-conversation metrics.</div></div
   };
 
   function showClient(name){
+    if(!clientRoleConfig[currentRole] || !["home","collaboration","approvals","timeline","files","results"].includes(name)) return;
+    document.getElementById("profileScreen")?.classList.add("hidden");
+    document.querySelectorAll(".screen").forEach(screen => screen.classList.add("hidden"));
+    document.getElementById("clientPortal").classList.remove("hidden");
+    const workspaceLabel=document.getElementById("workspaceLabel");
+    if(workspaceLabel) workspaceLabel.innerHTML="<strong>Brand portal</strong><span>"+clientRoleConfig[currentRole].brand+"</span>";
+    document.getElementById("contextTitle").textContent="BRUT × FAUX";
+    document.getElementById("contextMeta").textContent=clientRoleConfig[currentRole].brand+" portal";
     currentClientScreen = name;
     document.querySelectorAll("[data-client-panel]").forEach(panel => panel.classList.toggle("hidden", panel.dataset.clientPanel !== name));
     document.querySelectorAll("[data-client-screen]").forEach(btn => btn.classList.toggle("active", btn.dataset.clientScreen === name));
     if(currentRole==="brut"||currentRole==="faux") writeAppRoute("/portal/"+currentRole+"/"+name,(clientRoleConfig[currentRole]?.brand||"Brand")+" · "+name.charAt(0).toUpperCase()+name.slice(1));
+    syncMobileContext();
     window.scrollTo({top:0,behavior:"smooth"});
   }
 
@@ -4393,7 +4404,13 @@ and never merge owned-media metrics with public-conversation metrics.</div></div
     routeSyncSuppressed=true;
     try{
       if(path==="/profile"){
-        setRole("admin");
+        const profileParams=new URLSearchParams(location.search);
+        const profileBrand=profileParams.get("brand");
+        setRole(profileBrand==="brut"||profileBrand==="faux"?profileBrand:"admin");
+        if(currentRole!=="admin"){
+          const from=profileParams.get("from");
+          showClient(["home","collaboration","approvals","timeline","files","results"].includes(from)?from:"home");
+        }
         openProfile();
       }else{
         const portal=path.match(/^\/portal\/(brut|faux)\/(home|collaboration|approvals|timeline|files|results)$/);
