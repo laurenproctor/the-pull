@@ -1932,7 +1932,7 @@
             <div>
               <div class="eyebrow">Account</div>
               <h1>Your profile</h1>
-              <p class="lede">Manage your identity, security, brand membership, and how your organization’s visual system appears in The Pull.</p>
+              <p class="lede">Manage your contact details and workspace preferences. In this public preview, changes save in this browser only; they are not a private account.</p>
             </div>
             <div class="profile-save-state" id="profileSaveState" role="status" aria-live="polite"><span class="profile-save-dot"></span><span id="profileSaveText">All changes saved</span></div>
           </div>
@@ -1955,7 +1955,7 @@
                   <div class="field"><label for="profileLastName">Last name</label><input id="profileLastName" autocomplete="family-name" value="Proctor"></div>
                   <div class="field"><label for="profileUsername">Username</label><input id="profileUsername" autocomplete="username" value="lauren"><div class="tiny muted">Unique across The Pull.</div></div>
                   <div class="field"><label for="profileEmail">Email</label><input id="profileEmail" type="email" autocomplete="email" value="lauren@thepull.example"><div class="tiny muted">Used for login, invitations, and account recovery.</div></div>
-                  <div class="field"><label for="profileTitle">Job title</label><input id="profileTitle" value="Founder · Partner Studio"></div>
+                  <div class="field"><label for="profileLocation">Location</label><input id="profileLocation" name="location" autocomplete="address-level2" placeholder="City, region, country" maxlength="180"><div class="tiny muted">Enter your location for now. Place suggestions will be added when location lookup is connected.</div></div><div class="field"><label for="profilePhone">Phone number</label><input id="profilePhone" name="phone" type="tel" autocomplete="tel" placeholder="+1 212 555 0123" maxlength="40"><div class="tiny muted">Optional. Adding a number does not subscribe you to SMS.</div></div><div class="field"><label for="profileTitle">Job title</label><input id="profileTitle" value="Founder · Partner Studio"></div>
                   <div class="field"><label for="profileTimezone">Timezone</label><select id="profileTimezone"><option>America/New_York</option><option selected>America/Los_Angeles</option><option>Europe/London</option><option>Europe/Paris</option></select></div>
                 </div>
               </section>
@@ -4079,7 +4079,7 @@ and never merge owned-media metrics with public-conversation metrics.</div></div
     try{
       const saved=JSON.parse(localStorage.getItem("thepull.profile."+role)||"null");
       if(saved){
-        p.first=saved.first_name||p.first;p.last=saved.last_name||p.last;p.username=saved.username||p.username;p.email=saved.email||p.email;p.title=saved.job_title||p.title;p.site=saved.brand_website_url??p.site;
+        p.first=saved.first_name||p.first;p.last=saved.last_name||p.last;p.username=saved.username||p.username;p.email=saved.email||p.email;p.title=saved.job_title||p.title;p.site=saved.brand_website_url??p.site;p.location=saved.location??"";p.phone=saved.phone??"";
         document.querySelectorAll("#profileScreen [data-preference]").forEach(t=>{
           if(saved.preferences && Object.prototype.hasOwnProperty.call(saved.preferences,t.dataset.preference)){
             const on=!!saved.preferences[t.dataset.preference];t.classList.toggle("active",on);t.setAttribute("aria-pressed",on?"true":"false");
@@ -4091,7 +4091,7 @@ and never merge owned-media metrics with public-conversation metrics.</div></div
     }catch{}
     const values={
       profileFirstName:p.first,profileLastName:p.last,profileUsername:p.username,
-      profileEmail:p.email,profileTitle:p.title,brandWebsiteUrl:p.site
+      profileEmail:p.email,profileTitle:p.title,brandWebsiteUrl:p.site,profileLocation:p.location||"",profilePhone:p.phone||""
     };
     Object.entries(values).forEach(([id,val])=>{const el=document.getElementById(id);if(el)el.value=val});
     const org=document.getElementById("profileOrgName");if(org)org.textContent=p.org;
@@ -4155,6 +4155,8 @@ and never merge owned-media metrics with public-conversation metrics.</div></div
       username:get("profileUsername").trim(),
       email:get("profileEmail").trim(),
       job_title:get("profileTitle").trim(),
+      location:get("profileLocation").trim(),
+      phone:get("profilePhone").trim(),
       timezone:get("profileTimezone"),
       brand_website_url:get("brandWebsiteUrl").trim(),
       use_organization_theme:document.getElementById("brandThemeToggle")?.classList.contains("active")||false,
@@ -4172,7 +4174,7 @@ and never merge owned-media metrics with public-conversation metrics.</div></div
     try{
       localStorage.setItem(profileStorageKey(),JSON.stringify(state));
       const p=profileRoleConfig[currentRole]||profileRoleConfig.admin;
-      p.first=state.first_name;p.last=state.last_name;p.username=state.username;p.email=state.email;p.title=state.job_title;p.site=state.brand_website_url;
+      p.first=state.first_name;p.last=state.last_name;p.username=state.username;p.email=state.email;p.title=state.job_title;p.site=state.brand_website_url;p.location=state.location;p.phone=state.phone;
       const tn=document.getElementById("topProfileName");if(tn)tn.textContent=state.first_name;
       const initials=((state.first_name[0]||"")+(state.last_name[0]||"")).toUpperCase();
       const tav=document.getElementById("topProfileAvatar");if(tav&&!tav.style.backgroundImage)tav.textContent=initials;

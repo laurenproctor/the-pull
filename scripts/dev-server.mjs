@@ -15,7 +15,7 @@ createServer(async (req,res) => {
       const q = new URL(req.url, 'http://preview').searchParams;
       const width = Math.max(320, Math.min(1600, Number(q.get('width')) || 390));
       const target = q.get('page') || '/';
-      if (!/^\/[a-z0-9/]*$/i.test(target)) throw new Error('Invalid route');
+      if (!/^\/[a-z0-9/-]*$/i.test(target)) throw new Error('Invalid route');
       res.writeHead(200, {'Content-Type':'text/html'});
       res.end(`<body style="margin:0;background:#999"><iframe title="Responsive preview" src="${target}" style="border:0;width:${width}px;height:100vh;display:block"></iframe></body>`);
       return;
