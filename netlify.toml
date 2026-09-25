@@ -9,7 +9,191 @@
 
 
 [[redirects]]
-  from = "/*"
+  from = "/app"
+  to = "/app/discover"
+  status = 301
+
+[[redirects]]
+  from = "/dashboard"
+  to = "/app/discover"
+  status = 301
+
+[[redirects]]
+  from = "/app/discover"
   to = "/dashboard.html"
   status = 200
 
+[[redirects]]
+  from = "/app/support"
+  to = "/dashboard.html"
+  status = 200
+
+[[redirects]]
+  from = "/profile"
+  to = "/dashboard.html"
+  status = 200
+
+[[redirects]]
+  from = "/observatory"
+  to = "/dashboard.html"
+  status = 200
+
+[[redirects]]
+  from = "/observatory/editorial"
+  to = "/dashboard.html"
+  status = 200
+
+[[redirects]]
+  from = "/observatory/methodology"
+  to = "/dashboard.html"
+  status = 200
+
+[[redirects]]
+  from = "/analytics"
+  to = "/dashboard.html"
+  status = 200
+
+[[redirects]]
+  from = "/analytics/channels"
+  to = "/dashboard.html"
+  status = 200
+
+[[redirects]]
+  from = "/analytics/data-quality"
+  to = "/dashboard.html"
+  status = 200
+
+[[redirects]]
+  from = "/analytics/reports"
+  to = "/dashboard.html"
+  status = 200
+
+[[redirects]]
+  from = "/reports"
+  to = "/dashboard.html"
+  status = 200
+
+[[redirects]]
+  from = "/legal"
+  to = "/dashboard.html"
+  status = 200
+
+[[redirects]]
+  from = "/creative"
+  to = "/dashboard.html"
+  status = 200
+
+[[redirects]]
+  from = "/campaign"
+  to = "/dashboard.html"
+  status = 200
+
+[[redirects]]
+  from = "/app/opportunities/brut-faux/brief"
+  to = "/dashboard.html"
+  status = 200
+
+[[redirects]]
+  from = "/app/opportunities/brut-faux/assessment"
+  to = "/dashboard.html"
+  status = 200
+
+[[redirects]]
+  from = "/app/opportunities/brut-faux/compare"
+  to = "/dashboard.html"
+  status = 200
+
+[[redirects]]
+  from = "/app/opportunities/brut-faux/opportunity-brief"
+  to = "/dashboard.html"
+  status = 200
+
+[[redirects]]
+  from = "/app/opportunities/brut-faux/pursuit"
+  to = "/dashboard.html"
+  status = 200
+
+[[redirects]]
+  from = "/observatory/studies/budweiser-dickies"
+  to = "/dashboard.html"
+  status = 200
+
+[[redirects]]
+  from = "/observatory/studies/supreme-apresse"
+  to = "/dashboard.html"
+  status = 200
+
+[[redirects]]
+  from = "/observatory/studies/carolina-taffin"
+  to = "/dashboard.html"
+  status = 200
+
+[[redirects]]
+  from = "/observatory/studies/paul-barbour"
+  to = "/dashboard.html"
+  status = 200
+
+[[redirects]]
+  from = "/portal/brut/home"
+  to = "/dashboard.html"
+  status = 200
+
+[[redirects]]
+  from = "/portal/brut/collaboration"
+  to = "/dashboard.html"
+  status = 200
+
+[[redirects]]
+  from = "/portal/brut/approvals"
+  to = "/dashboard.html"
+  status = 200
+
+[[redirects]]
+  from = "/portal/brut/timeline"
+  to = "/dashboard.html"
+  status = 200
+
+[[redirects]]
+  from = "/portal/brut/files"
+  to = "/dashboard.html"
+  status = 200
+
+[[redirects]]
+  from = "/portal/brut/results"
+  to = "/dashboard.html"
+  status = 200
+
+[[redirects]]
+  from = "/portal/faux/home"
+  to = "/dashboard.html"
+  status = 200
+
+[[redirects]]
+  from = "/portal/faux/collaboration"
+  to = "/dashboard.html"
+  status = 200
+
+[[redirects]]
+  from = "/portal/faux/approvals"
+  to = "/dashboard.html"
+  status = 200
+
+[[redirects]]
+  from = "/portal/faux/timeline"
+  to = "/dashboard.html"
+  status = 200
+
+[[redirects]]
+  from = "/portal/faux/files"
+  to = "/dashboard.html"
+  status = 200
+
+[[redirects]]
+  from = "/portal/faux/results"
+  to = "/dashboard.html"
+  status = 200
+
+[[redirects]]
+  from = "/*"
+  to = "/404.html"
+  status = 404
