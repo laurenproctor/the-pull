@@ -41,7 +41,7 @@
     });
   }
   function init(){
-    const nav=document.querySelector('.pull-nav nav')||document.querySelector('.topbar-right');
+    const nav=document.querySelector('[data-theme-host]')||document.querySelector('.pull-nav nav')||document.querySelector('.topbar-right');
     if(nav){const b=document.createElement('button');b.type='button';b.className='pull-theme-toggle';b.dataset.themeToggle='';b.setAttribute('role','switch');b.setAttribute('aria-label','Dark mode');nav.append(b);}
     updateTheme();
     document.addEventListener('click',e=>{if(e.target.closest('[data-theme-toggle]')){
