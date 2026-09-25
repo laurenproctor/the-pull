@@ -51,7 +51,7 @@
     const sidebar=document.getElementById('appSidebar');if(!sidebar)return;
     sidebar.querySelectorAll('[data-primary],[data-screen],[data-client-screen]').forEach(b=>{
       const name=b.dataset.primary||b.dataset.screen||b.dataset.clientScreen;
-      const text=b.textContent.trim();b.setAttribute('aria-label',text);b.title=text;
+      const text=[...b.childNodes].map(n=>n.textContent.trim()).filter(Boolean).join(' ');b.setAttribute('aria-label',text);b.title=text;
       if(!b.querySelector('span'))b.innerHTML='<span>'+b.textContent+'</span>';
       b.insertAdjacentHTML('afterbegin',icon(name==='results'?'analytics':name));
     });
