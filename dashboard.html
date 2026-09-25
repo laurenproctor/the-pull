@@ -363,6 +363,8 @@
     .client-side-nav{display:flex;flex-direction:column;gap:4px}
     .client-side-nav button{width:100%;border:0;background:transparent;color:#c9d0d7;text-align:left;padding:10px 12px;border-radius:10px;display:flex;justify-content:space-between;align-items:center}
     .client-side-nav button:hover{background:#191d22;color:#fff}.client-side-nav button.active{background:#252a30;color:#fff}
+    .portal-switch{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:44px;margin-top:14px;padding:10px 12px;border-top:1px solid #30363d;color:#c9d0d7;font-size:12px;text-decoration:underline;text-underline-offset:4px}
+    .portal-switch:hover,.portal-switch:focus-visible{color:#fff;background:#191d22}
     .client-role-card{margin-top:14px;padding:12px;border:1px solid #30363d;background:#171a1e;border-radius:13px}
     .client-role-card strong{display:block;color:#fff;font-size:13px;margin-bottom:4px}.client-role-card p{color:#8f98a3;font-size:11px;line-height:1.45;margin:0}
     .permission-strip{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:10px 13px;margin:-8px 0 18px;border:1px solid var(--line);border-radius:12px;background:#fff;font-size:11px;color:var(--muted)}
@@ -1878,6 +1880,7 @@
         <button data-client-screen="files"><span>Files</span></button>
         <button data-client-screen="results"><span>Results</span></button>
       </nav>
+      <a class="portal-switch" id="partnerPortalLink" href="/portal/faux/home"><span>View FAUX dashboard</span><span aria-hidden="true">↔</span></a>
       <div class="client-role-card">
         <strong id="sidebarClientBrand">BRUT</strong>
         <p>Partner Studio manages execution. You see the decisions, shared commitments, and results that matter.</p>
@@ -4296,6 +4299,9 @@ and never merge owned-media metrics with public-conversation metrics.</div></div
     document.getElementById("contextTitle").textContent="BRUT × FAUX";
     document.getElementById("contextMeta").textContent=clientRoleConfig[currentRole].brand+" portal";
     currentClientScreen = name;
+    const partnerPortalLink=document.getElementById("partnerPortalLink");
+    partnerPortalLink.href="/portal/"+(currentRole==="brut"?"faux":"brut")+"/"+name;
+    partnerPortalLink.querySelector("span").textContent="View "+clientRoleConfig[currentRole].partner+" dashboard";
     document.querySelectorAll("[data-client-panel]").forEach(panel => panel.classList.toggle("hidden", panel.dataset.clientPanel !== name));
     document.querySelectorAll("[data-client-screen]").forEach(btn => btn.classList.toggle("active", btn.dataset.clientScreen === name));
     if(currentRole==="brut"||currentRole==="faux") writeAppRoute("/portal/"+currentRole+"/"+name,(clientRoleConfig[currentRole]?.brand||"Brand")+" · "+name.charAt(0).toUpperCase()+name.slice(1));
