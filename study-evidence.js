@@ -73,7 +73,7 @@ function studySocialRecords(id,study){
     const posts=[['Dcxwx4IDXAR','@barbour'],['Dc0Vx87Ag4s','@barbour'],['Dc2mtH8J3Mi','@paulsmithdesign']];
     posts.forEach(([code,handle],i)=>owned.push({recordId:`${id}:instagram:${code}`,lane:'owned',network:'instagram',handle,title:`Highland Odyssey · launch Reel ${i+1}`,copy:'Official campaign Reel referenced by The Impression. Open the original post if Instagram requires sign-in to play it here.',sourceUrl:`https://www.instagram.com/reel/${code}/`,sourceType:'Official Instagram permalink · observed in editorial embed',evidenceUrl:'https://theimpression.com/barbour-and-paul-smith-head-to-the-highlands-for-third-collaboration/',collectedAt:'2026-09-25T00:23:51Z',captureNote:'Permalink recovered from the editorial page. No new engagement snapshot collected.',media:[{type:'instagram',url:`https://www.instagram.com/reel/${code}/`,caption:'Original Instagram Reel · playback depends on Instagram availability.'}]}));
   }
-  return uniqueEvidence([...owned,...earned,...localStudyEvidence(id).records]);
+  return uniqueEvidence([...owned,...earned,...localStudyEvidence(id).records]).map(post=>enrichStudyPost(id,post));
 }
 function getStudyCoverage(id,study,posts){
   const press=[...new Map((study.press||[]).map(p=>[p.link,{...p,category:'press',collectedAt:recordedSourceDate(study,p.link),sourceUrl:p.link}])).values()];
@@ -112,7 +112,7 @@ function evidenceMediaMarkup(media,post){
 }
 function studyPostMarkup(post){
   const network=studyNetworks.find(n=>n.id===post.network);const url=evidenceUrl(post.sourceUrl);
-  return `<article class="social-post-card"><div class="social-post-head"><div class="social-post-author"><div class="social-platform-badge">${evidenceEscape(network?.name==='Instagram'?'IG':network?.name==='YouTube'?'YT':network?.name?.slice(0,2)||'↗')}</div><div><strong>${evidenceEscape(post.handle||'Public source')}</strong><span>${evidenceEscape(post.accountRole||post.sourceType||'Manually collected')}</span></div></div>${post.contextOnly?'<span class="pill">Collection context</span>':''}</div>${post.title?`<h4 style="font-size:14px;margin:14px 0 0">${evidenceEscape(post.title)}</h4>`:''}${evidenceMediaMarkup(post.media,post)}<div class="social-post-quote">${evidenceEscape(post.quote||post.copy||'')}</div><div class="social-post-tags">${(post.tags||post.engagement||[]).map(t=>`<span class="tag">${evidenceEscape(t)}</span>`).join('')}</div><div class="social-post-source"><small>${evidenceEscape(post.captureNote||post.sourceType||'Public source record')}${post.publishedAt?`<br>Published: ${evidenceEscape(post.publishedAt)}`:''}${post.localId?'<br>Saved in this browser only.':''}</small>${url?`<a href="${evidenceEscape(url)}" target="_blank" rel="noopener noreferrer">Open source ↗</a>`:''}${post.evidenceUrl?`<a href="${evidenceEscape(evidenceUrl(post.evidenceUrl))}" target="_blank" rel="noopener noreferrer">Source of embed ↗</a>`:''}</div>${collectedStamp([post])}${post.localId?`<button type="button" class="remove-local-evidence" data-remove-evidence="${evidenceEscape(post.localId)}">Remove local record</button>`:''}</article>`;
+  return `<article class="social-post-card"><div class="social-post-head"><div class="social-post-author"><div class="social-platform-badge">${evidenceEscape(network?.name==='Instagram'?'IG':network?.name==='YouTube'?'YT':network?.name?.slice(0,2)||'↗')}</div><div><strong>${evidenceEscape(post.handle||'Public source')}</strong><span>${evidenceEscape(post.accountRole||post.sourceType||'Manually collected')}</span></div></div>${post.contextOnly?'<span class="pill">Collection context</span>':''}</div>${post.title?`<h4 style="font-size:14px;margin:14px 0 0">${evidenceEscape(post.title)}</h4>`:''}${evidenceMediaMarkup(post.media,post)}<div class="social-post-quote">${evidenceEscape(post.quote||post.copy||'')}</div><div class="social-post-tags">${(post.tags||post.engagement||[]).map(t=>`<span class="tag">${evidenceEscape(t)}</span>`).join('')}</div>${postInsightsMarkup(post)}<div class="social-post-source"><small>${evidenceEscape(post.captureNote||post.sourceType||'Public source record')}${post.publishedAt?`<br>Published: ${evidenceEscape(post.publishedAt)}`:''}${post.localId?'<br>Saved in this browser only.':''}</small>${url?`<a href="${evidenceEscape(url)}" target="_blank" rel="noopener noreferrer">Open source ↗</a>`:''}${post.evidenceUrl?`<a href="${evidenceEscape(evidenceUrl(post.evidenceUrl))}" target="_blank" rel="noopener noreferrer">Source of embed ↗</a>`:''}</div>${collectedStamp([post])}${post.localId?`<button type="button" class="remove-local-evidence" data-remove-evidence="${evidenceEscape(post.localId)}">Remove local record</button>`:''}</article>`;
 }
 function renderNetworkSections(id,study,posts,lane){
   return studyNetworks.map(network=>{
@@ -151,10 +151,11 @@ function renderStudyEvidence(id,study){
   const sourceRecords=(study.sources||[]).map(p=>({collectedAt:p.captured}));
   ['studyGalleryCollected','studyMetricsCollected','studyPressCollected'].forEach(id=>document.getElementById(id).innerHTML=collectedStamp(sourceRecords,'Source pack · last recorded collection'));
   document.getElementById('studyPageCollected').innerHTML=collectedStamp(getStudyCoverage(id,study,posts).all,'Study · last data collected');
+  renderStudyPerformance(id,study,posts);
   document.querySelectorAll('[data-retry-network]').forEach(button=>button.addEventListener('click',()=>openStudyCollection(id,button.dataset.retryNetwork,button.dataset.retryLane)));
   document.querySelectorAll('[data-evidence-media]').forEach(media=>media.addEventListener('error',()=>{media.hidden=true;media.closest('figure').querySelector('.social-media-fallback').hidden=false},true));
   document.querySelectorAll('[data-remove-evidence]').forEach(button=>button.addEventListener('click',()=>{
-    const state=loadLocalStudyEvidence(),entry=localStudyEvidence(id);state[id]={records:entry.records.filter(p=>p.localId!==button.dataset.removeEvidence),previous:studyCoverageSnapshot(id,study)};
+    const state=loadLocalStudyEvidence(),entry=localStudyEvidence(id);state[id]={...state[id],records:entry.records.filter(p=>p.localId!==button.dataset.removeEvidence),previous:studyCoverageSnapshot(id,study)};
     try{localStorage.setItem(studyEvidenceStorageKey,JSON.stringify(state));renderStudyEvidence(id,study)}catch{showSystemToast('Record not removed','This browser could not save the change.');}
   }));
 }
@@ -183,7 +184,7 @@ function openStudyCollection(id,networkId,lane){
     const record={localId:crypto.randomUUID(),network:networkId,lane,sourceUrl,handle:form.get('handle').trim(),copy:form.get('copy').trim(),publishedAt:form.get('publishedAt')||null,collectedAt:new Date().toISOString(),sourceType:'Manually collected source',media:mediaUrl?[{type:mediaType,url:mediaUrl,caption:'Post media · manually collected'}]:[]};
     if(!record.handle||!record.copy){error.textContent='Add the publisher and your observation.';return}
     const existing=studySocialRecords(id,study);if(existing.some(p=>evidenceIdentity(p)===evidenceIdentity(record))){error.textContent='This post is already saved in this evidence set.';return}
-    const state=loadLocalStudyEvidence(),entry=localStudyEvidence(id);state[id]={records:[...entry.records,record],previous:studyCoverageSnapshot(id,study)};
+    const state=loadLocalStudyEvidence(),entry=localStudyEvidence(id);state[id]={...state[id],records:[...entry.records,record],previous:studyCoverageSnapshot(id,study)};
     try{localStorage.setItem(studyEvidenceStorageKey,JSON.stringify(state))}catch{error.textContent='This browser could not save the record. Check storage settings and try again.';return}
     dialog.close();renderStudyEvidence(id,study);showSystemToast('Post collected','Saved in this browser. Coverage counts and collection timestamps are updated.');
   });
