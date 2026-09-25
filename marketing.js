@@ -10,7 +10,7 @@
   }
   const form=document.getElementById('enquiry-form');
   if(!form)return;
-  const interestLabels={general:'A collaboration / general enquiry',sprint:'Opportunity Sprint ($5,000)',managed:'Managed Collaboration (from $30,000)',programme:'Ongoing collaboration programme',legal:'Independent agreement review (fee confirmed by counsel)'};
+  const interestLabels={general:'A collaboration / general inquiry',sprint:'Opportunity Sprint ($5,000)',managed:'Managed Collaboration (from $30,000)',programme:'Ongoing collaboration program',legal:'Independent agreement review (fee confirmed by counsel)'};
   const interest=document.getElementById('enquiry-interest');
   const requested=new URLSearchParams(location.search).get('interest');
   if(interest&&Object.hasOwn(interestLabels,requested))interest.value=requested;
@@ -26,9 +26,9 @@
     email.href='mailto:support@the---pull.com?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);
     preview.hidden=false;status.textContent='Draft prepared. Review it below, then open your email app to send.';draft.focus();
   });
-  form.addEventListener('input',()=>{if(!preview.hidden){preview.hidden=true;status.textContent='Details changed. Prepare your enquiry again to update the draft.';}});
+  form.addEventListener('input',()=>{if(!preview.hidden){preview.hidden=true;status.textContent='Details changed. Prepare your inquiry again to update the draft.';}});
   document.getElementById('enquiry-copy').addEventListener('click',async()=>{
-    try{await navigator.clipboard.writeText(draft.value);status.textContent='Enquiry copied. Paste it into an email to support@the---pull.com.';}
+    try{await navigator.clipboard.writeText(draft.value);status.textContent='Inquiry copied. Paste it into an email to support@the---pull.com.';}
     catch{draft.focus();draft.select();status.textContent='Select and copy the draft above, then paste it into your email app.';}
   });
   email.addEventListener('click',()=>{status.textContent='Your email app can now open the draft. Send it there when you’re ready. Nothing has been submitted by this website.';});
