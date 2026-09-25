@@ -15,3 +15,8 @@ html[data-theme=dark] .marketing .m-tools .pull-theme-toggle{color:var(--m-fg)}
 html[data-theme=dark] .marketing .pull-404-number{background:var(--m-panel);color:var(--m-fg);border-color:var(--m-line)}
 html[data-theme=dark] .marketing .pull-pill{background:var(--m-fg);color:var(--m-bg);border-color:var(--m-fg)}
 html[data-theme=dark] .marketing .pull-pill.outline{background:transparent;color:var(--m-fg)}
+/* Founder-led About page. */
+.m-founder{display:grid;grid-template-columns:1fr 1fr;gap:6vw;padding:0 5vw 100px;align-items:start}.m-founder-profile{padding:45px;background:var(--m-panel)}.m-founder-profile h2{font-size:clamp(58px,7vw,100px);margin:45px 0 30px}.m-founder-bio{padding-top:28px;border-top:1px solid var(--m-line)}.m-founder-bio h2{font-size:clamp(40px,4.8vw,70px)}.m-founder-lede{font-size:26px;line-height:1.2;letter-spacing:-.03em}.m-founder-bio>p:not(.m-kicker):not(.m-founder-lede){color:var(--m-muted);max-width:580px}.m-founder-bio .m-actions{align-items:center;gap:24px}.m-about-question{background:var(--m-panel)}.m-about-question h2{max-width:1050px}.m-about-question>p:not(.m-kicker){max-width:610px;font-size:19px}
+@media(min-width:1700px){.m-founder{padding-left:max(5vw,calc((100vw - 1550px)/2));padding-right:max(5vw,calc((100vw - 1550px)/2))}}
+@media(min-width:761px) and (max-width:980px){.m-nav a{padding-inline:10px}.m-workspace{padding-inline:5px}.m-logo{padding-inline:16px}.m-nav{gap:0}.m-header{gap:6px}}
+@media(max-width:760px){.m-founder{grid-template-columns:1fr;gap:35px;padding:0 6vw 65px}.m-founder-profile{padding:30px}.m-founder-profile h2{margin-top:35px}.m-founder-bio h2{font-size:44px}}
