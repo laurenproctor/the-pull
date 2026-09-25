@@ -7,7 +7,7 @@ const args = process.argv.slice(2);
 const value = (key, fallback) => args.includes(key) ? args[args.indexOf(key) + 1] : fallback;
 const port = Number(value('--port', '4173'));
 const host = value('--host', '0.0.0.0');
-const mime = { '.html':'text/html', '.css':'text/css', '.js':'text/javascript', '.webp':'image/webp', '.png':'image/png', '.svg':'image/svg+xml', '.json':'application/json', '.ico':'image/x-icon' };
+const mime = { '.html':'text/html', '.css':'text/css', '.js':'text/javascript', '.webp':'image/webp', '.png':'image/png', '.svg':'image/svg+xml', '.json':'application/json', '.ico':'image/x-icon', '.mp4':'video/mp4' };
 createServer(async (req,res) => {
   try {
     let route = decodeURIComponent(new URL(req.url, 'http://preview').pathname);
