@@ -10,7 +10,7 @@
   }
   const form=document.getElementById('enquiry-form');
   if(!form)return;
-  const interestLabels={general:'A collaboration / general inquiry',press:'Press inquiry',sprint:'Opportunity Sprint ($5,000)',managed:'Managed Collaboration (from $30,000)',programme:'Ongoing collaboration program',legal:'Independent agreement review (fee confirmed by counsel)'};
+  const interestLabels={general:'A collaboration / general inquiry',press:'Press inquiry',sprint:'Opportunity Sprint ($5,000)',managed:'Managed Collaboration ($16,000 per partner · $32,000 total)',programme:'Ongoing collaboration program',legal:'Independent agreement review (fee confirmed by counsel)'};
   const interest=document.getElementById('enquiry-interest');
   const requested=new URLSearchParams(location.search).get('interest');
   if(interest&&Object.hasOwn(interestLabels,requested))interest.value=requested;

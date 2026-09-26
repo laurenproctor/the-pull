@@ -1,6 +1,6 @@
 # Public pricing
 
-Published offers: Opportunity Sprint $5,000 fixed; Managed Collaboration from $30,000; ongoing programme by custom proposal; public Observatory free. Fees are USD, per defined engagement, excluding external budgets and applicable taxes.
+Published offers: Opportunity Sprint $5,000 fixed; Managed Collaboration $16,000 per partner ($32,000 total for two partners); ongoing programme by custom proposal; public Observatory free. Fees are USD; managed collaboration pricing is per partner for the defined two-partner engagement. External budgets and applicable taxes are additional.
 
 The Sprint is included in a managed engagement. The full fee is credited for the same brief within 60 days. The page defines baseline research, revisions, timeline, marketing scope, outreach limits, separate supplier costs, and milestone billing. No checkout or payment processing is added: scope is agreed before paid work.
 
