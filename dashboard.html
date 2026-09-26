@@ -6,6 +6,7 @@
   <link rel="stylesheet" href="/site.css"><script src="/site-consent.js" defer></script><script type="text/plain" data-pull-feedback data-src="https://www.bugherd.com/sidebarv2.js?apikey=a3ihvj1feiamwnfghbpgeg"></script>
   <title>Partner Studio + Collaboration Observatory</title>
 <link rel="stylesheet" href="/report-templates.css"><script src="/report-templates.js" defer></script>
+<link rel="stylesheet" href="/campaign-planner.css"><script src="/campaign-kit-data.js" defer></script><script src="/campaign-planner.js" defer></script>
   <meta name="description" content="Self-contained Partner Studio prototype with integrated Collaboration Observatory intelligence, measurement, and reporting." />
   <style>
     :root{
@@ -1876,6 +1877,7 @@
       <nav class="client-side-nav" id="clientNav">
         <button class="active" data-client-screen="home"><span>Home</span></button>
         <button data-client-screen="collaboration"><span>Collaboration</span></button>
+        <button data-client-screen="plan"><span>Campaign plan</span></button>
         <button data-client-screen="approvals"><span>Approvals</span><span class="badge" id="clientApprovalBadge">2</span></button>
         <button data-client-screen="timeline"><span>Timeline</span></button>
         <button data-client-screen="files"><span>Files</span></button>
@@ -3068,40 +3070,7 @@ and never merge owned-media metrics with public-conversation metrics.</div></div
       </section>
 
       <!-- TOP-LEVEL CAMPAIGN PLANNING -->
-      <section class="screen hidden" id="screen-campaign">
-        <div class="screen-head"><div><div class="eyebrow">Channel orchestration</div><h1>Campaign planning</h1><p class="lede">Choose the channels that will reach your intended customers and see the planned paid budget. Mark each channel Include, Later, or Exclude, then save the plan for review.</p></div><button class="button">Save campaign plan</button></div>
-        <div class="campaign-summary"><div class="campaign-summary-box"><span>Included channels</span><strong id="campaignIncludedCount">9</strong></div><div class="campaign-summary-box"><span>Decide later</span><strong id="campaignTbdCount">5</strong></div><div class="campaign-summary-box"><span>Excluded</span><strong id="campaignExcludedCount">4</strong></div><div class="campaign-summary-box"><span>Working paid budget</span><strong id="campaignBudgetTotal">$68K</strong></div></div>
-        <div class="campaign-readiness"><strong>Planning rule:</strong> Include means the channel has a real job in the campaign. Exclude means the team has deliberately decided not to use it. Decide later preserves a live question without accidentally treating it as approved scope.</div>
-        <div class="studio-card" style="margin-top:24px">
-          <div class="campaign-group"><div class="campaign-group-head"><div><div class="section-label">Owned</div><h2>Brand-controlled channels</h2><p>Surfaces where either brand controls publishing and customer experience.</p></div></div>
-            <div class="channel-plan-row" data-channel-budget="0"><div class="channel-plan-name"><strong>Collaboration landing page</strong><span>Web · canonical campaign destination</span></div><div class="channel-plan-detail">Story, CTA, event/product detail, UTMs, press assets, legal terms.</div><div class="channel-state"><button class="active" data-state="include">Include</button><button data-state="tbd">Later</button><button data-state="exclude">Exclude</button></div><div class="channel-budget">Owned</div><div class="channel-owner">BRUT + Studio</div></div>
-            <div class="channel-plan-row" data-channel-budget="0"><div class="channel-plan-name"><strong>Email / CRM</strong><span>Brand subscriber lists</span></div><div class="channel-plan-detail">Launch announcement, segmentation, reminder, post-activation follow-up.</div><div class="channel-state"><button class="active" data-state="include">Include</button><button data-state="tbd">Later</button><button data-state="exclude">Exclude</button></div><div class="channel-budget">Owned</div><div class="channel-owner">BRUT</div></div>
-            <div class="channel-plan-row" data-channel-budget="0"><div class="channel-plan-name"><strong>Instagram</strong><span>Feed · Stories · Reels</span></div><div class="channel-plan-detail">Announcement, customer ritual, product detail, partner cross-posts.</div><div class="channel-state"><button class="active" data-state="include">Include</button><button data-state="tbd">Later</button><button data-state="exclude">Exclude</button></div><div class="channel-budget">Owned</div><div class="channel-owner">Both brands</div></div>
-            <div class="channel-plan-row" data-channel-budget="0"><div class="channel-plan-name"><strong>TikTok</strong><span>Owned short-form video</span></div><div class="channel-plan-detail">Ritual demonstration, behind the scenes, creator-friendly vertical assets.</div><div class="channel-state"><button data-state="include">Include</button><button class="active" data-state="tbd">Later</button><button data-state="exclude">Exclude</button></div><div class="channel-budget">Owned</div><div class="channel-owner">BRUT</div></div>
-            <div class="channel-plan-row" data-channel-budget="0"><div class="channel-plan-name"><strong>LinkedIn</strong><span>Brand / founder narrative</span></div><div class="channel-plan-detail">Business rationale, collaboration process, partner story, results read.</div><div class="channel-state"><button class="active" data-state="include">Include</button><button data-state="tbd">Later</button><button data-state="exclude">Exclude</button></div><div class="channel-budget">Owned</div><div class="channel-owner">Studio</div></div>
-          </div>
-
-          <div class="campaign-group"><div class="campaign-group-head"><div><div class="section-label">Paid</div><h2>Media amplification</h2><p>Paid channels should have a defined audience, creative job, budget, and conversion event.</p></div></div>
-            <div class="channel-plan-row" data-channel-budget="18000"><div class="channel-plan-name"><strong>Meta ads</strong><span>Instagram + Facebook</span></div><div class="channel-plan-detail">Retargeting + high-fit NYC prospecting; vertical and feed creative.</div><div class="channel-state"><button class="active" data-state="include">Include</button><button data-state="tbd">Later</button><button data-state="exclude">Exclude</button></div><div class="channel-budget">$18K</div><div class="channel-owner">Media</div></div>
-            <div class="channel-plan-row" data-channel-budget="12000"><div class="channel-plan-name"><strong>TikTok ads</strong><span>Short-form paid social</span></div><div class="channel-plan-detail">Creative test against organic ritual footage; optimize qualified landing visits.</div><div class="channel-state"><button class="active" data-state="include">Include</button><button data-state="tbd">Later</button><button data-state="exclude">Exclude</button></div><div class="channel-budget">$12K</div><div class="channel-owner">Media</div></div>
-            <div class="channel-plan-row" data-channel-budget="14000"><div class="channel-plan-name"><strong>Google Ads</strong><span>Search + YouTube</span></div><div class="channel-plan-detail">Capture collaboration/product demand and support video reach around launch.</div><div class="channel-state"><button class="active" data-state="include">Include</button><button data-state="tbd">Later</button><button data-state="exclude">Exclude</button></div><div class="channel-budget">$14K</div><div class="channel-owner">Media</div></div>
-            <div class="channel-plan-row" data-channel-budget="16000"><div class="channel-plan-name"><strong>CTV</strong><span>Streaming video</span></div><div class="channel-plan-detail">High-attention launch storytelling in geo-targeted NYC inventory.</div><div class="channel-state"><button data-state="include">Include</button><button class="active" data-state="tbd">Later</button><button data-state="exclude">Exclude</button></div><div class="channel-budget">$16K</div><div class="channel-owner">Media</div></div>
-            <div class="channel-plan-row" data-channel-budget="8000"><div class="channel-plan-name"><strong>ChatGPT ads</strong><span>Conversational discovery</span></div><div class="channel-plan-detail">Test only if inventory/targeting supports the collaboration’s customer and measurement goals.</div><div class="channel-state"><button data-state="include">Include</button><button class="active" data-state="tbd">Later</button><button data-state="exclude">Exclude</button></div><div class="channel-budget">$8K</div><div class="channel-owner">Media</div></div>
-          </div>
-
-          <div class="campaign-group"><div class="campaign-group-head"><div><div class="section-label">Earned + community</div><h2>Coverage and conversation</h2><p>Earned channels cannot be “bought” into existence; planning defines outreach, assets, targets, monitoring, and response.</p></div></div>
-            <div class="channel-plan-row" data-channel-budget="0"><div class="channel-plan-name"><strong>Editorial outreach</strong><span>Fashion · design · hospitality · culture</span></div><div class="channel-plan-detail">Pitch strategy, embargo, press kit, spokespersons, follow-up, coverage tracking.</div><div class="channel-state"><button class="active" data-state="include">Include</button><button data-state="tbd">Later</button><button data-state="exclude">Exclude</button></div><div class="channel-budget">Earned</div><div class="channel-owner">PR</div></div>
-            <div class="channel-plan-row" data-channel-budget="0"><div class="channel-plan-name"><strong>Design-site syndication</strong><span>Directories + design media</span></div><div class="channel-plan-detail">Structured asset pack and submission workflow; dedupe syndicated coverage in reporting.</div><div class="channel-state"><button class="active" data-state="include">Include</button><button data-state="tbd">Later</button><button data-state="exclude">Exclude</button></div><div class="channel-budget">Earned</div><div class="channel-owner">PR</div></div>
-            <div class="channel-plan-row" data-channel-budget="0"><div class="channel-plan-name"><strong>Reddit</strong><span>Relevant communities</span></div><div class="channel-plan-detail">Monitor organic conversation; participate only where brand presence is appropriate and transparent.</div><div class="channel-state"><button data-state="include">Include</button><button class="active" data-state="tbd">Later</button><button data-state="exclude">Exclude</button></div><div class="channel-budget">Community</div><div class="channel-owner">Social</div></div>
-            <div class="channel-plan-row" data-channel-budget="0"><div class="channel-plan-name"><strong>Substack / newsletters</strong><span>Independent writers</span></div><div class="channel-plan-detail">Targeted outreach to writers whose audience overlaps the campaign’s cultural territory.</div><div class="channel-state"><button data-state="include">Include</button><button class="active" data-state="tbd">Later</button><button data-state="exclude">Exclude</button></div><div class="channel-budget">Earned</div><div class="channel-owner">PR</div></div>
-          </div>
-
-          <div class="campaign-group"><div class="campaign-group-head"><div><div class="section-label">Experiential + partner surfaces</div><h2>Where the collaboration physically happens</h2><p>These are operational campaign channels too; they need owners, creative, rights, measurement, and contingency planning.</p></div></div>
-            <div class="channel-plan-row" data-channel-budget="0"><div class="channel-plan-name"><strong>FAUX service experience</strong><span>Primary activation</span></div><div class="channel-plan-detail">Six-week ritual, staff experience, customer prompts, signage, QR/measurement layer.</div><div class="channel-state"><button class="active" data-state="include">Include</button><button data-state="tbd">Later</button><button data-state="exclude">Exclude</button></div><div class="channel-budget">Core</div><div class="channel-owner">FAUX + Studio</div></div>
-            <div class="channel-plan-row" data-channel-budget="0"><div class="channel-plan-name"><strong>Launch event</strong><span>One-time gathering</span></div><div class="channel-plan-detail">Press/creator preview, photography, hospitality, invite list, and amplification.</div><div class="channel-state"><button data-state="include">Include</button><button data-state="tbd">Later</button><button class="active" data-state="exclude">Exclude</button></div><div class="channel-budget">Excluded</div><div class="channel-owner">—</div></div>
-          </div>
-        </div>
-      </section>
+      <section class="screen hidden" id="screen-campaign"><div class="screen-head"><div><div class="eyebrow">Shared delivery workspace</div><h1>Campaign planning</h1><p class="lede">See the funded activities, what each partner contributes, and the creative that makes every channel happen.</p></div></div><div data-campaign-planner></div></section>
 
       <section class="screen hidden pull-support" id="screen-support"><p class="section-label">Help &amp; support</p><h1>Let’s keep things moving.</h1><p>Find an answer, flag a research issue, or tell us where the experience gets in your way.</p><div class="pull-support-grid"><div class="pull-support-card"><h3>What can we help with?</h3><p>This opens a draft in your email application. Nothing is submitted until you send it there.</p><form id="pullSupportForm"><label for="pullSupportTopic">Topic</label><select id="pullSupportTopic"><option>Using The Pull</option><option>Research correction</option><option>Technical problem</option><option>Accessibility help</option><option>Privacy request</option><option>Rights or removal request</option><option>Product idea</option></select><label for="pullSupportUrl">Page URL (optional)</label><input id="pullSupportUrl" type="url" placeholder="https://…"><label for="pullSupportDetails">What happened, or what would you like to do?</label><textarea id="pullSupportDetails" required maxlength="5000" placeholder="Tell us the task, what you expected, and what you saw."></textarea><p class="pull-small">Please leave out passwords, sensitive personal information, and confidential client details.</p><div class="pull-actions"><button class="pull-pill" type="submit">Create email draft</button><button type="button" class="pull-text-button" id="pullSupportCopy">Copy request</button></div><p class="pull-support-message" id="pullSupportStatus" role="status"></p></form><p>Or email <a href="mailto:support@the---pull.com">support@the---pull.com</a>. Privacy requests: <a href="mailto:privacy@the---pull.com">privacy@the---pull.com</a>.</p><p class="pull-small">We do not currently offer live chat or a guaranteed response time.</p></div><div><div class="pull-support-card"><h3>Start here</h3><details><summary>What is real in this preview?</summary><p>The Observatory contains sourced research with evidence labels. Partner Studio workflows and example results are illustrative. Role switching is a demonstration, not a secure account system.</p></details><details><summary>Where are my edits saved?</summary><p>Profile edits, manually added research, and comments save in this browser. They do not sync across devices. Clearing site data can erase them. Keep your own copy of important research.</p></details><details><summary>Why is a social network empty?</summary><p>“Posts were not observed” means no matching record is saved. Use Try data collection again to open a targeted search and record what you find. There is no automated collection provider connected yet.</p></details><details><summary>Why are comments or sentiment missing?</summary><p>A post’s comment total does not contain the comment text or dates. Add a collected comment with its source and publication date to update the timeline. Sentiment uses only classified third-party comments.</p></details><details><summary>Why won’t a video load?</summary><p>Social players stay blocked until you accept Embedded social media in Cookie settings. A platform may still require sign-in or remove a post. The original source link is available.</p></details><details><summary>How do I correct a study?</summary><p>Choose Research correction and include the study URL, the claim to review, and an original source supporting the correction.</p></details></div><div class="pull-support-card" style="margin-top:24px"><h3>Your experience, your choices.</h3><p>Enable the optional feedback tool to leave a page-specific report through BugHerd, or use email without enabling it.</p><button type="button" class="pull-pill" data-cookie-settings>Cookie &amp; feedback settings</button><p class="pull-small">Feedback may include screenshots and browser details. Check the page for private information first.</p></div></div></div></section>
 <!-- ROLE-AWARE BRAND PORTAL -->
@@ -3163,6 +3132,7 @@ and never merge owned-media metrics with public-conversation metrics.</div></div
           <div class="client-grid"><div class="client-card client-span-8"><div class="section-label">Shared</div><div class="file-row"><div class="file-icon">PDF</div><div><h3>Collaboration brief v4</h3><p>Approved concept, contributions, timeline, and measurement plan.</p></div><span class="visibility-chip shared">Shared</span></div><div class="file-row"><div class="file-icon">IMG</div><div><h3>Concept visuals</h3><p>The Ritual visual direction · current approved set.</p></div><span class="visibility-chip shared">Shared</span></div><div class="file-row"><div class="file-icon">DOC</div><div><h3>Launch plan</h3><p>Working milestones and approval dates.</p></div><span class="visibility-chip shared">Shared</span></div><div class="file-row"><div class="file-icon">XLS</div><div><h3>Contribution matrix</h3><p>What BRUT, FAUX, and Partner Studio are committing.</p></div><span class="visibility-chip shared">Shared</span></div></div><div class="client-card client-span-4"><div class="section-label">Private to <span data-client-brand>BRUT</span></div><div class="file-row"><div class="file-icon">PDF</div><div><h3 id="privateFileOne">Internal approval memo</h3><p>Visible only to your organization and Partner Studio.</p></div><span class="visibility-chip brand-private">Private</span></div><div class="file-row"><div class="file-icon">XLS</div><div><h3 id="privateFileTwo">Brand analytics access</h3><p>Permissioned source details and internal data owner.</p></div><span class="visibility-chip brand-private">Private</span></div></div></div>
         </section>
 
+        <section class="client-screen hidden" data-client-panel="plan"><div class="client-shell-head"><div><div class="client-shell-kicker">Shared partnership plan</div><h1>Know what’s happening, and who funds it.</h1><p class="lede">Review the agreed idea, each activity’s budget, and the copy and assets behind your partnership.</p></div></div><div data-campaign-planner></div></section>
         <section class="client-screen hidden" data-client-panel="results">
           <div class="client-shell-head"><div><div class="client-shell-kicker"><span data-client-brand>BRUT</span> executive results</div><h1>Here’s what changed.</h1><p class="lede">Track attention, demand, brand response and business outcomes at 30, 60 and 90 days. Record sourced results, compare the baseline, and decide what to do next.</p></div><span class="pill">Report draft · local only</span></div>
           <div data-outcome-report></div><details class="outcome-legacy"><summary>Existing illustrative 30-day summary · demo figures</summary><div class="results-hero"><div class="section-label">First 30 days · illustrative</div><h2 id="resultHeadline">The strongest observable response was earned attention and audience growth.</h2><p id="resultInterpretation">The collaboration generated meaningful editorial attention and improved qualified traffic during the activation window. Public evidence remains insufficient to isolate incremental sales, so commercial impact should not be overstated.</p><div class="result-metrics"><div class="result-metric"><strong>27</strong><span>Qualified press placements</span><small>Observed · validated corpus</small></div><div class="result-metric"><strong id="roleFollowerMetric">+8.4%</strong><span id="roleFollowerLabel">BRUT Instagram audience</span><small>First-party / observed snapshots</small></div><div class="result-metric"><strong>+18%</strong><span>Qualified site visits vs baseline</span><small>First-party · permissioned</small></div><div class="result-metric"><strong>74%</strong><span>Positive sampled sentiment</span><small>Reviewed sample · not public opinion</small></div></div></div>
@@ -4033,42 +4003,6 @@ and never merge owned-media metrics with public-conversation metrics.</div></div
   document.querySelectorAll("[data-analytics-tab]").forEach(btn=>btn.addEventListener("click",()=>setAnalyticsView(btn.dataset.analyticsTab)));
   document.querySelectorAll("[data-workspace-jump='analytics-reports']").forEach(btn=>btn.addEventListener("click",()=>setAnalyticsView("reports")));
 
-  // Campaign planning: tri-state inclusion with live scope/budget summary.
-  function updateCampaignSummary(){
-    const rows=[...document.querySelectorAll(".channel-plan-row")];
-    let include=0,tbd=0,exclude=0,budget=0;
-    rows.forEach(row=>{
-      const active=row.querySelector(".channel-state button.active");
-      const state=active?.dataset.state||"tbd";
-      if(state==="include"){include++;budget+=Number(row.dataset.channelBudget||0)}
-      else if(state==="exclude")exclude++;
-      else tbd++;
-    });
-    const included=document.getElementById("campaignIncludedCount"),later=document.getElementById("campaignTbdCount"),excluded=document.getElementById("campaignExcludedCount"),total=document.getElementById("campaignBudgetTotal");
-    if(included)included.textContent=include;
-    if(later)later.textContent=tbd;
-    if(excluded)excluded.textContent=exclude;
-    if(total)total.textContent=budget>=1000?"$"+Math.round(budget/1000)+"K":"$"+budget;
-  }
-
-  document.querySelectorAll(".channel-state").forEach(group=>{
-    group.querySelectorAll("button").forEach(btn=>btn.addEventListener("click",()=>{
-      group.querySelectorAll("button").forEach(b=>b.classList.toggle("active",b===btn));
-      updateCampaignSummary();
-      showSystemToast(
-        btn.dataset.state==="include"?"Channel included":btn.dataset.state==="exclude"?"Channel excluded":"Channel left undecided",
-        btn.closest(".channel-plan-row")?.querySelector(".channel-plan-name strong")?.textContent||"Campaign plan updated"
-      );
-    }));
-  });
-
-  document.querySelector("#screen-campaign .screen-head .button")?.addEventListener("click",()=>{
-    updateCampaignSummary();
-    showSystemToast("Campaign plan saved","Channel decisions, working scope, and budget are saved in this prototype.");
-  });
-
-  updateCampaignSummary();
-
   // Universal user profile prototype.
   let currentAdminScreen="discover";
   let profileReturnRole="admin";
@@ -4292,7 +4226,7 @@ and never merge owned-media metrics with public-conversation metrics.</div></div
   };
 
   function showClient(name){
-    if(!clientRoleConfig[currentRole] || !["home","collaboration","approvals","timeline","files","results"].includes(name)) return;
+    if(!clientRoleConfig[currentRole] || !["home","collaboration","plan","approvals","timeline","files","results"].includes(name)) return;
     document.getElementById("profileScreen")?.classList.add("hidden");
     document.querySelectorAll(".screen").forEach(screen => screen.classList.add("hidden"));
     document.getElementById("clientPortal").classList.remove("hidden");
@@ -4417,11 +4351,11 @@ and never merge owned-media metrics with public-conversation metrics.</div></div
         setRole(profileBrand==="brut"||profileBrand==="faux"?profileBrand:"admin");
         if(currentRole!=="admin"){
           const from=profileParams.get("from");
-          showClient(["home","collaboration","approvals","timeline","files","results"].includes(from)?from:"home");
+          showClient(["home","collaboration","plan","approvals","timeline","files","results"].includes(from)?from:"home");
         }
         openProfile();
       }else{
-        const portal=path.match(/^\/portal\/(brut|faux)\/(home|collaboration|approvals|timeline|files|results)$/);
+        const portal=path.match(/^\/portal\/(brut|faux)\/(home|collaboration|plan|approvals|timeline|files|results)$/);
         const study=path.match(/^\/observatory\/studies\/([a-z0-9-]+)$/);
         if(portal){
           setRole(portal[1]);
